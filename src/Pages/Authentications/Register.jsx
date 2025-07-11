@@ -1,105 +1,345 @@
-import React from 'react';
-import useAuth from '../../CustomHooks/useAuth';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useLocation, Link } from "react-router";
+import useAuth from "../../CustomHooks/useAuth";
+import useAxios from "../../CustomHooks/useAxios";
+import Swal from "sweetalert2";
+import { Button } from "@material-tailwind/react";
+import { IoEye } from "react-icons/io5";
+import { PiEyeClosedBold } from "react-icons/pi";
+import axios from "axios";
 
 const Register = () => {
-    
-    const {theme} = useAuth()
+    const { createUser, updateUserInfo } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const axiosSecure = useAxios();
+    const from = location.state?.from?.pathname || "/";
+
+    const [districts, setDistricts] = useState([]);
+    const [upazillas, setUpazillas] = useState([]);
+    const [selectedDistrictId, setSelectedDistrictId] = useState("");
+    const [selectedDistrictName, setSelectedDistrictName] = useState("");
+    const [selectedUpazillaId, setSelectedUpazillaId] = useState("");
+    const [selectedUpazillaName, setSelectedUpazillaName] = useState("");
+    const [avatarFile, setAvatarFile] = useState(null);
+    const [showPass, setShowPass] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        reset,
+        formState: { errors },
+    } = useForm();
+
+    const password = watch("password");
+
+    // ✅ Fetch Districts
+    useEffect(() => {
+        axiosSecure.get("/districts").then((res) => setDistricts(res.data));
+    }, [axiosSecure]);
+
+    // ✅ Fetch Upazillas when District changes
+    useEffect(() => {
+        if (selectedDistrictId) {
+            axiosSecure
+                .get(`/upazillas/${selectedDistrictId}`)
+                .then((res) => setUpazillas(res.data));
+        } else {
+            setUpazillas([]);
+        }
+        setSelectedUpazillaId("");
+        setSelectedUpazillaName("");
+    }, [selectedDistrictId, axiosSecure]);
+
+    // ✅ Image Upload Handler
+    const handleImageUpload = async (file) => {
+        const formData = new FormData();
+        formData.append("image", file);
+        const res = await axios.post(
+            `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`,
+            formData
+        );
+        return res.data.data.url;
+    };
+
+    // ✅ Submit Handler
+    const onSubmit = async (data) => {
+        try {
+            if (data.password !== data.confirmPassword) {
+                Swal.fire({
+                    title: "Oops!",
+                    text: "Passwords do not match!",
+                    icon: "error",
+                    background: "#fff",
+                    color: "#b91c1c",
+                    confirmButtonColor: "#b91c1c",
+                });
+                return;
+            }
+
+            if (!avatarFile) {
+                Swal.fire({
+                    title: "Required!",
+                    text: "Please upload a profile picture",
+                    icon: "warning",
+                    background: "#fff",
+                    color: "#92400e",
+                    confirmButtonColor: "#ca8a04",
+                });
+                return;
+            }
+
+            let avatarUrl = await handleImageUpload(avatarFile);
+
+            const userCredential = await createUser(data.email, data.password);
+            await updateUserInfo({
+                displayName: data.name,
+                photoURL: avatarUrl,
+            });
+
+            const saveUser = {
+                name: data.name,
+                email: data.email,
+                avatar: avatarUrl,
+                bloodGroup: data.bloodGroup,
+                districtId: selectedDistrictId,
+                districtName: selectedDistrictName,
+                upazillaId: selectedUpazillaId,
+                upazillaName: selectedUpazillaName,
+                role: "donor",
+                status: "active",
+                createdAt: new Date(),
+            };
+
+            const response = await axiosSecure.post("/donors", saveUser);
+            if (response.data.inserted === false) {
+                Swal.fire({
+                    title: "Warning!",
+                    text: "User already exists!",
+                    icon: "warning",
+                    background: "#fef9c3",
+                    color: "#92400e",
+                    iconColor: "#facc15",
+                    confirmButtonColor: "#ca8a04",
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: "Success!",
+                text: "Registration complete!",
+                icon: "success",
+                background: "#fff",
+                color: "#16a34a",
+                confirmButtonColor: "#dc2626",
+            });
+
+            reset();
+            setAvatarFile(null);
+            setSelectedDistrictId("");
+            setSelectedDistrictName("");
+            setSelectedUpazillaId("");
+            setSelectedUpazillaName("");
+            navigate(from, { replace: true });
+        } catch (err) {
+            console.error("Registration Error:", err);
+            Swal.fire({
+                title: "Error!",
+                text: "Something went wrong!",
+                icon: "error",
+                confirmButtonColor: "#dc2626",
+            });
+        }
+    };
 
     return (
-        <div className="relative flex size-full min-h-screen flex-col dark:bg-[#121516] dark group/design-root overflow-x-hidden"
-            style={{ fontFamily: '"Space Grotesk", "Noto Sans", sans-serif' }}>
-            <div className="layout-container flex h-full grow flex-col">
-                <div className="px-40 flex flex-1 justify-center py-5">
-                    <div className="layout-content-container flex flex-col w-[512px] max-w-[512px] py-5 max-w-[960px] flex-1">
-                        <h2 className="text-white tracking-tight text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5">
-                            Create your account
-                        </h2>
-                        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-                            <label className="flex flex-col min-w-40 flex-1">
-                                <p className="text-white text-base font-medium leading-normal pb-2">Email</p>
-                                <input
-                                    placeholder="Enter your email"
-                                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#40494f] bg-[#1e2224] focus:border-[#40494f] h-14 placeholder:text-[#a2adb3] p-[15px] text-base font-normal leading-normal"
-                                />
-                            </label>
-                        </div>
-                        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-                            <label className="flex flex-col min-w-40 flex-1">
-                                <p className="text-white text-base font-medium leading-normal pb-2">Name</p>
-                                <input
-                                    placeholder="Enter your name"
-                                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#40494f] bg-[#1e2224] focus:border-[#40494f] h-14 placeholder:text-[#a2adb3] p-[15px] text-base font-normal leading-normal"
-                                />
-                            </label>
-                        </div>
-                        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-                            <label className="flex flex-col min-w-40 flex-1">
-                                <p className="text-white text-base font-medium leading-normal pb-2">Blood Group</p>
-                                <select
-                                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#40494f] bg-[#1e2224] focus:border-[#40494f] h-14 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724px%27 height=%2724px%27 fill=%27rgb(162,173,179)%27 viewBox=%270 0 256 256%27%3e%3cpath d=%27M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z%27%3e%3c/path%3e%3c/svg%3e')] placeholder:text-[#a2adb3] p-[15px] text-base font-normal leading-normal"
-                                >
-                                    <option value="one">Select your blood group</option>
-                                    <option value="two">two</option>
-                                    <option value="three">three</option>
-                                </select>
-                            </label>
-                        </div>
-                        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-                            <label className="flex flex-col min-w-40 flex-1">
-                                <p className="text-white text-base font-medium leading-normal pb-2">District</p>
-                                <select
-                                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#40494f] bg-[#1e2224] focus:border-[#40494f] h-14 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724px%27 height=%2724px%27 fill=%27rgb(162,173,179)%27 viewBox=%270 0 256 256%27%3e%3cpath d=%27M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z%27%3e%3c/path%3e%3c/svg%3e')] placeholder:text-[#a2adb3] p-[15px] text-base font-normal leading-normal"
-                                >
-                                    <option value="one">Select your district</option>
-                                    <option value="two">two</option>
-                                    <option value="three">three</option>
-                                </select>
-                            </label>
-                        </div>
-                        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-                            <label className="flex flex-col min-w-40 flex-1">
-                                <p className="text-white text-base font-medium leading-normal pb-2">Upazila</p>
-                                <select
-                                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#40494f] bg-[#1e2224] focus:border-[#40494f] h-14 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724px%27 height=%2724px%27 fill=%27rgb(162,173,179)%27 viewBox=%270 0 256 256%27%3e%3cpath d=%27M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z%27%3e%3c/path%3e%3c/svg%3e')] placeholder:text-[#a2adb3] p-[15px] text-base font-normal leading-normal"
-                                >
-                                    <option value="one">Select your upazila</option>
-                                    <option value="two">two</option>
-                                    <option value="three">three</option>
-                                </select>
-                            </label>
-                        </div>
-                        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-                            <label className="flex flex-col min-w-40 flex-1">
-                                <p className="text-white text-base font-medium leading-normal pb-2">Password</p>
-                                <input
-                                    placeholder="Enter your password"
-                                    type="password"
-                                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#40494f] bg-[#1e2224] focus:border-[#40494f] h-14 placeholder:text-[#a2adb3] p-[15px] text-base font-normal leading-normal"
-                                />
-                            </label>
-                        </div>
-                        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-                            <label className="flex flex-col min-w-40 flex-1">
-                                <p className="text-white text-base font-medium leading-normal pb-2">Confirm Password</p>
-                                <input
-                                    placeholder="Confirm your password"
-                                    type="password"
-                                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#40494f] bg-[#1e2224] focus:border-[#40494f] h-14 placeholder:text-[#a2adb3] p-[15px] text-base font-normal leading-normal"
-                                />
-                            </label>
-                        </div>
-                        <div className="flex px-4 py-3">
-                            <button
-                                className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 flex-1 bg-[#b2d1e5] text-[#121516] text-sm font-bold leading-normal tracking-[0.015em]"
-                            >
-                                <span className="truncate">Register</span>
-                            </button>
-                        </div>
-                        <p className="text-[#a2adb3] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center underline">
-                            Already have an account? Login
-                        </p>
+        <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-red-100 to-white">
+            <div className="w-full max-w-4xl bg-white rounded-xl shadow p-6 md:p-10">
+                <h1 className="text-3xl font-bold text-center mb-2">Join Us!</h1>
+                <h2 className="text-xl text-center text-red-600 mb-8">Register as Donor</h2>
+
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-5"
+                >
+                    {/* Email */}
+                    <div>
+                        <label>Email</label>
+                        <input
+                            {...register("email", { required: "Email is required" })}
+                            type="email"
+                            placeholder="you@example.com"
+                            className="w-full border rounded px-4 py-2"
+                        />
+                        {errors.email && (
+                            <p className="text-red-500 text-sm">{errors.email.message}</p>
+                        )}
                     </div>
-                </div>
+
+                    {/* Name */}
+                    <div>
+                        <label>Full Name</label>
+                        <input
+                            {...register("name", { required: "Name is required" })}
+                            type="text"
+                            placeholder="Your name"
+                            className="w-full border rounded px-4 py-2"
+                        />
+                        {errors.name && (
+                            <p className="text-red-500 text-sm">{errors.name.message}</p>
+                        )}
+                    </div>
+
+                    {/* Avatar */}
+                    <div>
+                        <label>Profile Picture</label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            className="w-full border rounded px-4 py-2"
+                            onChange={(e) => setAvatarFile(e.target.files[0])}
+                        />
+                    </div>
+
+                    {/* Blood Group */}
+                    <div>
+                        <label>Blood Group</label>
+                        <select
+                            {...register("bloodGroup", {
+                                required: "Select your blood group",
+                            })}
+                            className="w-full border rounded px-4 py-2"
+                        >
+                            <option value="">Select Blood Group</option>
+                            {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((bg) => (
+                                <option key={bg} value={bg}>
+                                    {bg}
+                                </option>
+                            ))}
+                        </select>
+                        {errors.bloodGroup && (
+                            <p className="text-red-500 text-sm">{errors.bloodGroup.message}</p>
+                        )}
+                    </div>
+
+                    {/* District */}
+                    <div>
+                        <label>District</label>
+                        <select
+                            value={selectedDistrictId}
+                            onChange={(e) => {
+                                const id = e.target.value;
+                                const name = districts.find((d) => d.id === id)?.name || "";
+                                setSelectedDistrictId(id);
+                                setSelectedDistrictName(name);
+                            }}
+                            className="w-full border rounded px-4 py-2"
+                        >
+                            <option value="">Select District</option>
+                            {districts.map((d) => (
+                                <option key={d.id} value={d.id}>
+                                    {d.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Upazilla */}
+                    <div>
+                        <label>Upazilla</label>
+                        <select
+                            value={selectedUpazillaId}
+                            onChange={(e) => {
+                                const id = e.target.value;
+                                const name = upazillas.find((u) => u.id === id)?.name || "";
+                                setSelectedUpazillaId(id);
+                                setSelectedUpazillaName(name);
+                            }}
+                            disabled={!selectedDistrictId}
+                            className="w-full border rounded px-4 py-2"
+                        >
+                            <option value="">Select Upazilla</option>
+                            {upazillas.map((u) => (
+                                <option key={u.id} value={u.id}>
+                                    {u.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Password */}
+                    <div className="relative">
+                        <label>Password</label>
+                        <input
+                            {...register("password", {
+                                required: "Password required",
+                                minLength: { value: 6, message: "Min 6 characters" },
+                            })}
+                            type={showPass ? "text" : "password"}
+                            placeholder="Password"
+                            className="w-full border rounded px-4 py-2"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPass(!showPass)}
+                            className="absolute right-4 top-8"
+                        >
+                            {showPass ? <IoEye /> : <PiEyeClosedBold />}
+                        </button>
+                        {errors.password && (
+                            <p className="text-red-500 text-sm">{errors.password.message}</p>
+                        )}
+                    </div>
+
+                    {/* Confirm Password */}
+                    <div className="relative">
+                        <label>Confirm Password</label>
+                        <input
+                            {...register("confirmPassword", {
+                                required: "Confirm your password",
+                                validate: (value) =>
+                                    value === password || "Passwords do not match",
+                            })}
+                            type={showConfirm ? "text" : "password"}
+                            placeholder="Confirm Password"
+                            className="w-full border rounded px-4 py-2"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowConfirm(!showConfirm)}
+                            className="absolute right-4 top-8"
+                        >
+                            {showConfirm ? <IoEye /> : <PiEyeClosedBold />}
+                        </button>
+                        {errors.confirmPassword && (
+                            <p className="text-red-500 text-sm">
+                                {errors.confirmPassword.message}
+                            </p>
+                        )}
+                    </div>
+
+                    <div className="md:col-span-2">
+                        <Button
+                            type="submit"
+                            className="w-full bg-red-600 text-white py-3 cursor-pointer"
+                        >
+                            Register
+                        </Button>
+                    </div>
+                </form>
+
+                <p className="mt-4 text-center text-sm">
+                    Already have an account?{" "}
+                    <Link
+                        to="/login-user"
+                        className="text-red-600 font-semibold cursor-pointer"
+                    >
+                        Login Here
+                    </Link>
+                </p>
             </div>
         </div>
     );

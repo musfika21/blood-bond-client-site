@@ -5,6 +5,10 @@ import App from './App.jsx'
 import { RouterProvider } from 'react-router'
 import Router from './Router/Router.jsx'
 import AuthProvider from './contexts/AuthProvider.jsx'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+AOS.init();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

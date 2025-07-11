@@ -67,7 +67,7 @@ const NavLinks = ({ user }) => (
                 </NavLink>
             </li>
             <li className="text-lg flex items-center space-x-2">
-                <NavLink to="/funding" className="relative inline-block group px-1 py-0.5">
+                <NavLink to="/dashboard" className="relative inline-block group px-1 py-0.5">
                     {({ isActive }) => (
                         <span className={`relative inline-block hover:text-red-600 ${isActive ? 'text-red-600 font-semibold' : 'text-gray-800'}`}>
                             Dashboard
@@ -158,7 +158,7 @@ const NavigationBar = () => {
                             </div>
                         </div>
                     </> : <>
-                        <Button className="bg-red-600 text-base px-9 ">
+                        <Button className="bg-red-600 text-base px-9 hover:bg-red-800 cursor-pointer">
                             <Link to="/login-user" className="">Login</Link>
                         </Button>
                     </>
