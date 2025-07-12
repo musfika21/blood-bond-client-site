@@ -34,9 +34,15 @@ const Register = () => {
         formState: { errors },
     } = useForm();
 
+    useEffect(() => {
+        if (location.pathname === "/user-registration") {
+            window.document.title = "Register | Blood Bond";
+        }
+    }, [location.pathname]);
+
     const password = watch("password");
 
-    // ✅ Fetch Districts
+    // Fetch Districts
     useEffect(() => {
         axiosSecure.get("/districts").then((res) => setDistricts(res.data));
     }, [axiosSecure]);
@@ -105,7 +111,7 @@ const Register = () => {
                 email: data.email,
                 avatar: avatarUrl,
                 bloodGroup: data.bloodGroup,
-                districtId: selectedDistrictId,
+                 districtId: selectedDistrictId,
                 districtName: selectedDistrictName,
                 upazillaId: selectedUpazillaId,
                 upazillaName: selectedUpazillaName,

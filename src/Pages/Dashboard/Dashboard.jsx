@@ -62,7 +62,7 @@ const Dashboard = () => {
             {/* Welcome */}
             <div className="mb-6">
                 <h1 className="text-2xl font-bold text-red-600">
-                    Welcome, {user?.displayName}!
+                    Welcome, {user?.displayName}
                 </h1>
             </div>
 

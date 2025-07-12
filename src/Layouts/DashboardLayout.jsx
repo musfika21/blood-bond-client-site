@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet, NavLink, Link, href } from "react-router"; // ✅ router-dom!
+import { Outlet, NavLink, Link, href } from "react-router";
 import { cn } from "@/lib/utils";
 import {
     Sheet,
@@ -10,23 +10,31 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import photo from "../assets/logo.png";
 import useAuth from "../CustomHooks/useAuth";
+import { Toaster } from "react-hot-toast";
 
 const navItems = [
     { 
         name: "Home", 
-        href: "/dashboard" 
+        href: "/dashboard/home" 
+    },
+    {
+        name: "Create Donation Request",
+        href: '/dashboard/donation-request'
     },
     {
         name: "My Donation Requests",
         href: '/dashboard/my-donation-requests'
+    },
+    {
+        name: "Profile",
+        href: '/dashboard/profile'
     }
-    
 ];
 
 const DashboardLayout = () => {
 
     const { user } = useAuth();
-    console.log(user)
+    // console.log(user)
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
@@ -118,7 +126,7 @@ const DashboardLayout = () => {
             {/* Main Content + Outlet */}
             <main className="flex-1 bg-gray-50">
                 {/* Top Navbar */}
-                <div className="hidden bg-red-50 p-3 md:flex justify-end items-center mb-6">
+                <div className="hidden bg-red-50 p-3 md:flex justify-end items-center">
                     <div className="h-10 w-10 rounded-full">
                         <img className="object-cover rounded-lg" src={user.photoURL} alt="" />
                     </div>
@@ -126,6 +134,7 @@ const DashboardLayout = () => {
 
                 {/* Nested Routes Render Here */}
                 <Outlet />
+                <Toaster/>
             </main>
         </div>
     );

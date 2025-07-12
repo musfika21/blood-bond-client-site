@@ -10,6 +10,8 @@ import PrivateRoutes from '../Routes/PrivateRoute';
 import SearchDonor from '../ProjectComponets/SearchDonor';
 import Dashboard from '../Pages/Dashboard/Dashboard';
 import MyDonationRequests from '../Pages/Dashboard/MyDonationRequests';
+import ProfilePage from '../Pages/Dashboard/ProfilePage';
+import CreateDonationRequest from '../Pages/Dashboard/CreateDonationRequest';
 
 const Router = createBrowserRouter([
     {
@@ -35,12 +37,20 @@ const Router = createBrowserRouter([
         element: <PrivateRoutes><DashboardLayout/></PrivateRoutes>,
         children: [
             {
-                index: true,
+                path: 'home',
                 Component: Dashboard
             },
             {
                 path: 'my-donation-requests',
                 Component: MyDonationRequests
+            },
+            {
+                path: 'profile',
+                Component: ProfilePage
+            },
+            {
+                path: 'donation-request',
+                Component: CreateDonationRequest
             }
         ]
     },

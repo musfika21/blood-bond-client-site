@@ -9,7 +9,7 @@ const Loader = () => {
                 cssOverride={{}}
                 loading
                 size={100}
-                speedMultiplier={1.5}
+                speedMultiplier={1}
             />
         </div>
     );

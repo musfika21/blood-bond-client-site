@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router';
 import { Button } from '@material-tailwind/react';
 import { motion } from 'framer-motion';
@@ -34,6 +34,12 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
+
+    useEffect(() => {
+        if (location.pathname === "/login-user") {
+            window.document.title = "Login | Blood Bond";
+        }
+    }, [location.pathname]);
 
     const handleLogin = (e) => {
         e.preventDefault();
