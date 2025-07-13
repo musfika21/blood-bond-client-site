@@ -110,7 +110,7 @@ const CreateDonationRequest = () => {
                         {...register("recipientName", { required: true })}
                         type="text"
                         placeholder="Recipient full name"
-                        className="w-full border px-4 py-2 rounded"
+                        className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                     />
                 </div>
 
@@ -124,7 +124,7 @@ const CreateDonationRequest = () => {
                             // Reset upazila when district changes
                             setValue("recipientUpazila", "");
                         }}
-                        className="w-full border px-4 py-2 rounded"
+                        className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                     >
                         <option value="">Select District</option>
                         {districts.map(d => (
@@ -139,7 +139,7 @@ const CreateDonationRequest = () => {
                     <select
                         {...register("recipientUpazila", { required: true })}
                         disabled={!selectedDistrictId}
-                        className="w-full border px-4 py-2 rounded"
+                        className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                     >
                         <option value="">Select Upazila</option>
                         {upazillas.map(u => (
@@ -155,7 +155,7 @@ const CreateDonationRequest = () => {
                         {...register("hospitalName", { required: true })}
                         type="text"
                         placeholder="E.g., Dhaka Medical College"
-                        className="w-full border px-4 py-2 rounded"
+                        className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                     />
                 </div>
 
@@ -165,7 +165,7 @@ const CreateDonationRequest = () => {
                         <label className="block mb-1">Blood Group</label>
                         <select
                             {...register("bloodGroup", { required: true })}
-                            className="w-full border px-4 py-2 rounded"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                         >
                             <option value="">Select Blood Group</option>
                             {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(bg => (
@@ -180,7 +180,7 @@ const CreateDonationRequest = () => {
                         <input
                             {...register("donationDate", { required: true })}
                             type="date"
-                            className="w-full border px-4 py-2 rounded"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                         />
                     </div>
 
@@ -190,7 +190,7 @@ const CreateDonationRequest = () => {
                         <input
                             {...register("donationTime", { required: true })}
                             type="time"
-                            className="w-full border px-4 py-2 rounded"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                         />
                     </div>
                 </div>
@@ -202,7 +202,7 @@ const CreateDonationRequest = () => {
                         {...register("address", { required: true })}
                         type="text"
                         placeholder="e.g., Zahir Raihan Rd, Dhaka"
-                        className="w-full border px-4 py-2 rounded"
+                        className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                     />
                 </div>
 
@@ -213,7 +213,7 @@ const CreateDonationRequest = () => {
                         {...register("requestMessage", { required: true })}
                         rows={4}
                         placeholder="Explain why you need blood in detail..."
-                        className="w-full border px-4 py-2 rounded"
+                        className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                     ></textarea>
                 </div>
 
@@ -224,7 +224,7 @@ const CreateDonationRequest = () => {
                     ) : (
                         <button
                             type="submit"
-                            className="w-full bg-red-600 text-white py-3 rounded hover:bg-red-700"
+                            className="w-full bg-red-600 text-white py-3 rounded hover:bg-red-800 cursor-pointer"
                         >
                             Request
                         </button>

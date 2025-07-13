@@ -165,7 +165,7 @@ const Login = () => {
                             id="email"
                             name="email"
                             required
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                             placeholder="you@example.com"
                         />
                     </div>
@@ -179,7 +179,7 @@ const Login = () => {
                             id="password"
                             name="password"
                             required
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                             placeholder="Your password"
                         />
                         <button type="button" onClick={() => setShowPassword(!showPassword)}>

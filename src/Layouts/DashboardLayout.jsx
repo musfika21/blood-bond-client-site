@@ -7,15 +7,16 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import photo from "../assets/logo.png";
 import useAuth from "../CustomHooks/useAuth";
 import { Toaster } from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const navItems = [
-    { 
-        name: "Home", 
-        href: "/dashboard/home" 
+    {
+        name: "Home",
+        href: "/dashboard/home"
     },
     {
         name: "Create Donation Request",
@@ -33,9 +34,18 @@ const navItems = [
 
 const DashboardLayout = () => {
 
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     // console.log(user)
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const handleLogout = () => {
+        Swal.fire({
+            title: "Logout Successful",
+            icon: "success",
+            draggable: true,
+        });
+        logout();
+    }
 
     return (
         <div className="flex min-h-screen">
@@ -58,7 +68,7 @@ const DashboardLayout = () => {
                     </div>
                 </Link>
 
-                <nav className="space-y-2">
+                <nav className="flex-1 space-y-2">
                     {navItems.map((item) => (
                         <NavLink
                             key={item.name}
@@ -76,6 +86,13 @@ const DashboardLayout = () => {
                         </NavLink>
                     ))}
                 </nav>
+
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 text-gray-700 hover:text-red-600 px-3 py-2 rounded-md mt-6 cursor-pointer"
+                >
+                    <LogOut size={18} /> Logout
+                </button>
             </aside>
 
             {/* Sidebar - Mobile */}
@@ -89,37 +106,49 @@ const DashboardLayout = () => {
                         {sidebarOpen ? <X /> : <Menu />}
                     </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-64 p-6">
-                    <div className="flex items-center gap-2 mb-6">
-                        <img
-                            src={photo}
-                            alt="Blood Bond"
-                            className="h-10 w-auto object-contain"
-                        />
-                        <h2 className="text-xl font-bold">
-                            <span className="text-red-600">B</span>lood Bond
-                        </h2>
+                <SheetContent side="left" className="w-64 p-6 flex flex-col justify-between">
+                    <div>
+                        <div className="flex items-center gap-2 mb-6">
+                            <img
+                                src={photo}
+                                alt="Blood Bond"
+                                className="h-10 w-auto object-contain"
+                            />
+                            <h2 className="text-xl font-bold">
+                                <span className="text-red-600">B</span>lood Bond
+                            </h2>
+                        </div>
+
+                        <nav className="space-y-2">
+                            {navItems.map((item) => (
+                                <NavLink
+                                    key={item.name}
+                                    to={item.href}
+                                    onClick={() => setSidebarOpen(false)}
+                                    className={({ isActive }) =>
+                                        cn(
+                                            "block px-3 py-2 rounded-md",
+                                            isActive
+                                                ? "bg-red-100 text-red-600 font-semibold"
+                                                : "text-gray-700 hover:bg-gray-100"
+                                        )
+                                    }
+                                >
+                                    {item.name}
+                                </NavLink>
+                            ))}
+                        </nav>
                     </div>
 
-                    <nav className="space-y-2">
-                        {navItems.map((item) => (
-                            <NavLink
-                                key={item.name}
-                                to={item.href}
-                                onClick={() => setSidebarOpen(false)}
-                                className={({ isActive }) =>
-                                    cn(
-                                        "block px-3 py-2 rounded-md",
-                                        isActive
-                                            ? "bg-red-100 text-red-600 font-semibold"
-                                            : "text-gray-700 hover:bg-gray-100"
-                                    )
-                                }
-                            >
-                                {item.name}
-                            </NavLink>
-                        ))}
-                    </nav>
+                    <button
+                        onClick={() => {
+                            handleLogout();
+                            setSidebarOpen(false);
+                        }}
+                        className="flex items-center gap-2 text-gray-700 hover:text-red-600 px-3 py-2 rounded-md"
+                    >
+                        <LogOut size={18} /> Logout
+                    </button>
                 </SheetContent>
             </Sheet>
 
@@ -132,9 +161,8 @@ const DashboardLayout = () => {
                     </div>
                 </div>
 
-                {/* Nested Routes Render Here */}
                 <Outlet />
-                <Toaster/>
+                <Toaster />
             </main>
         </div>
     );

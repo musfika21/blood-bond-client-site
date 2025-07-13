@@ -178,7 +178,7 @@ const Register = () => {
                             {...register("email", { required: "Email is required" })}
                             type="email"
                             placeholder="you@example.com"
-                            className="w-full border rounded px-4 py-2"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                         />
                         {errors.email && (
                             <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -192,7 +192,7 @@ const Register = () => {
                             {...register("name", { required: "Name is required" })}
                             type="text"
                             placeholder="Your name"
-                            className="w-full border rounded px-4 py-2"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                         />
                         {errors.name && (
                             <p className="text-red-500 text-sm">{errors.name.message}</p>
@@ -205,7 +205,7 @@ const Register = () => {
                         <input
                             type="file"
                             accept="image/*"
-                            className="w-full border rounded px-4 py-2"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                             onChange={(e) => setAvatarFile(e.target.files[0])}
                         />
                     </div>
@@ -217,7 +217,7 @@ const Register = () => {
                             {...register("bloodGroup", {
                                 required: "Select your blood group",
                             })}
-                            className="w-full border rounded px-4 py-2"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                         >
                             <option value="">Select Blood Group</option>
                             {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((bg) => (
@@ -242,7 +242,7 @@ const Register = () => {
                                 setSelectedDistrictId(id);
                                 setSelectedDistrictName(name);
                             }}
-                            className="w-full border rounded px-4 py-2"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                         >
                             <option value="">Select District</option>
                             {districts.map((d) => (
@@ -265,7 +265,7 @@ const Register = () => {
                                 setSelectedUpazillaName(name);
                             }}
                             disabled={!selectedDistrictId}
-                            className="w-full border rounded px-4 py-2"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                         >
                             <option value="">Select Upazilla</option>
                             {upazillas.map((u) => (
@@ -286,7 +286,7 @@ const Register = () => {
                             })}
                             type={showPass ? "text" : "password"}
                             placeholder="Password"
-                            className="w-full border rounded px-4 py-2"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                         />
                         <button
                             type="button"
@@ -311,7 +311,7 @@ const Register = () => {
                             })}
                             type={showConfirm ? "text" : "password"}
                             placeholder="Confirm Password"
-                            className="w-full border rounded px-4 py-2"
+                            className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
                         />
                         <button
                             type="button"
