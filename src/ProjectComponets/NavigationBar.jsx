@@ -140,7 +140,7 @@ const NavigationBar = () => {
                             {
                                 user?.photoURL ? (
                                     <img
-                                        className="w-10 h-10 sm:w-12 sm:h-12 md:w-13 md:h-13 lg:w-15 lg:h-15 rounded-full border-2 lg:border-3 border-[#6F0E18]"
+                                        className="w-10 h-10 sm:w-12 sm:h-12 md:w-13 md:h-13 lg:w-15 lg:h-15 rounded-full border lg:border-3 border-red-700"
                                         src={user?.photoURL}
                                         alt="profile picture"
                                     />
@@ -156,7 +156,7 @@ const NavigationBar = () => {
                                 `}
                             >
                                 <p className="text-center">{user?.displayName}</p>
-                                <button className=" text-[#460911ca] cursor-pointer" onClick={handleSignOut}>Logout</button>
+                                <button className=" text-red-600 cursor-pointer" onClick={handleSignOut}>Logout</button>
                             </div>
                         </div>
                     </> : <>

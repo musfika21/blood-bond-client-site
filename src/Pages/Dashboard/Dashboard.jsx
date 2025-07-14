@@ -1,173 +1,266 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router"; // ✅ react-router-dom holo correct
+import { Eye, Pencil, Trash } from "lucide-react";
 import useAuth from "../../CustomHooks/useAuth";
 import useAxios from "../../CustomHooks/useAxios";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 import { Button } from "@material-tailwind/react";
+import axios from "axios";
 
 const Dashboard = () => {
-    const { user } = useAuth();
-    const axiosSecure = useAxios();
-    const navigate = useNavigate();
-    const [donationRequests, setDonationRequests] = useState([]);
+  const { user } = useAuth();
+  const axiosSecure = useAxios();
+  const navigate = useNavigate();
+  const [donationRequests, setDonationRequests] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
-    // Load recent 3 requests by this donor
-    useEffect(() => {
-        if (user?.email) {
-            axiosSecure
-                .get(`/donation-requests?email=${user.email}&limit=3`)
-                .then((res) => setDonationRequests(res.data))
-                .catch((err) => console.error(err));
-        }
-    }, [user, axiosSecure]);
+  // ✅ Load recent 3 requests
+  useEffect(() => {
+    if (user?.email) {
+      axiosSecure
+        .get(`/my-recent-donation-requests?email=${user.email}`)
+        .then((res) => setDonationRequests(res.data))
+        .catch((err) => console.error(err));
+    }
+  }, [user, axiosSecure]);
 
-    // Update donation status (done / cancel)
-    const handleStatusUpdate = async (id, status) => {
-        try {
-            await axiosSecure.patch(`/donation-requests/${id}`, { status });
-            Swal.fire("Updated!", `Donation marked as ${status}`, "success");
-            // Refresh list
-            setDonationRequests((prev) =>
-                prev.map((req) =>
-                    req._id === id ? { ...req, status } : req
-                )
-            );
-        } catch (err) {
-            console.error(err);
-            Swal.fire("Error!", "Could not update status", "error");
-        }
-    };
 
-    // Delete donation request
-    const handleDelete = (id) => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, delete it!",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                await axiosSecure.delete(`/donation-requests/${id}`);
-                setDonationRequests((prev) =>
-                    prev.filter((req) => req._id !== id)
-                );
-                Swal.fire("Deleted!", "Donation request deleted.", "success");
-            }
-        });
-    };
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "done":
+      case "completed":
+        return "bg-green-100 text-green-700";
+      case "pending":
+        return "bg-yellow-100 text-yellow-700";
+      case "inprogress":
+        return "bg-blue-100 text-blue-700";
+      case "canceled":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-gray-200 text-gray-700";
+    }
+  };
 
-    return (
-        <section className="p-6">
-            {/* Welcome */}
-            <div className="mb-6">
-                <h1 className="text-2xl font-bold text-red-600">
-                    Welcome, {user?.displayName}
-                </h1>
-            </div>
+  const handleView = async (id) => {
+    try {
+      const res = await axiosSecure.get(`/donation-requests/${id}`);
+      console.log("Fetched:", res.data);
+      setSelectedRequest(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-            {/* Donation Requests Table */}
-            {donationRequests.length > 0 && (
-                <div className="overflow-x-auto">
-                    <table className="min-w-full border">
-                        <thead className="bg-gray-100">
-                            <tr>
-                                <th className="border p-2">Recipient Name</th>
-                                <th className="border p-2">Location</th>
-                                <th className="border p-2">Date</th>
-                                <th className="border p-2">Time</th>
-                                <th className="border p-2">Blood Group</th>
-                                <th className="border p-2">Status</th>
-                                <th className="border p-2">Donor Info</th>
-                                <th className="border p-2">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {donationRequests.map((req) => (
-                                <tr key={req._id}>
-                                    <td className="border p-2">{req.recipientName}</td>
-                                    <td className="border p-2">
-                                        {req.recipientDistrict}, {req.recipientUpazila}
-                                    </td>
-                                    <td className="border p-2">{req.donationDate}</td>
-                                    <td className="border p-2">{req.donationTime}</td>
-                                    <td className="border p-2">{req.bloodGroup}</td>
-                                    <td className="border p-2 capitalize">{req.status}</td>
-                                    <td className="border p-2">
-                                        {req.status === "inprogress" ? (
-                                            <>
-                                                {req.donorName} <br />
-                                                {req.donorEmail}
-                                            </>
-                                        ) : (
-                                            "-"
-                                        )}
-                                    </td>
-                                    <td className="border p-2 flex flex-col gap-2">
-                                        {req.status === "inprogress" && (
-                                            <>
-                                                <Button
-                                                    size="sm"
-                                                    onClick={() => handleStatusUpdate(req._id, "done")}
-                                                    className="bg-green-600 text-white"
-                                                >
-                                                    Done
-                                                </Button>
-                                                <Button
-                                                    size="sm"
-                                                    onClick={() => handleStatusUpdate(req._id, "canceled")}
-                                                    className="bg-yellow-500 text-white"
-                                                >
-                                                    Cancel
-                                                </Button>
-                                            </>
-                                        )}
-                                        <Button
-                                            size="sm"
-                                            onClick={() =>
-                                                navigate(`/edit-donation-request/${req._id}`)
-                                            }
-                                            className="bg-blue-600 text-white"
-                                        >
-                                            Edit
-                                        </Button>
-                                        <Button
-                                            size="sm"
-                                            onClick={() => handleDelete(req._id)}
-                                            className="bg-red-600 text-white"
-                                        >
-                                            Delete
-                                        </Button>
-                                        <Button
-                                            size="sm"
-                                            onClick={() =>
-                                                navigate(`/donation-request/${req._id}`)
-                                            }
-                                            className="bg-gray-700 text-white"
-                                        >
-                                            View
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
 
-            {/* View All Requests */}
-            {donationRequests.length > 0 && (
-                <div className="mt-4">
-                    <Button
-                        onClick={() => navigate("/my-donation-requests")}
-                        className="bg-red-600 text-white"
+  const handleStatusUpdate = async (id, status) => {
+    try {
+      await axiosSecure.patch(`/donation-requests/${id}`, { status });
+      Swal.fire("Updated!", `Donation marked as ${status}`, "success");
+      setDonationRequests((prev) =>
+        prev.map((req) => (req._id === id ? { ...req, status } : req))
+      );
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error!", "Could not update status", "error");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (confirm.isConfirmed) {
+      await axiosSecure.delete(`/donation-requests/${id}`);
+      setDonationRequests((prev) => prev.filter((req) => req._id !== id));
+      Swal.fire("Deleted!", "Request has been deleted.", "success");
+    }
+  };
+
+  return (
+    <section className="p-6">
+      {/* ✅ Welcome */}
+      <motion.div
+        className="mb-6"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <h1 className="text-2xl md:text-3xl font-bold text-red-600">
+          Welcome, {user?.displayName || "Donor"}
+        </h1>
+        <p className="text-gray-600 text-sm mt-1">
+          Here are your recent donation requests.
+        </p>
+      </motion.div>
+
+      {/* ✅ Table */}
+      {donationRequests.length > 0 ? (
+        <div className="overflow-x-auto rounded border shadow">
+          <table className="min-w-full text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-3 text-left font-bold text-gray-600">
+                  Recipient
+                </th>
+                <th className="px-4 py-3 text-left font-bold text-gray-600">
+                  Location
+                </th>
+                <th className="px-4 py-3 text-left font-bold text-gray-600">
+                  Date
+                </th>
+                <th className="px-4 py-3 text-left font-bold text-gray-600">
+                  Time
+                </th>
+                <th className="px-4 py-3 text-left font-bold text-gray-600">
+                  Blood Group
+                </th>
+                <th className="px-4 py-3 text-left font-bold text-gray-600">
+                  Status
+                </th>
+                <th className="px-4 py-3 text-left font-bold text-gray-600">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white">
+              {donationRequests.map((req) => (
+                <tr
+                  key={req._id}
+                  className="border-t hover:bg-gray-50 transition"
+                >
+                  <td className="px-4 py-3">{req.recipientName}</td>
+                  <td className="px-4 py-3">
+                    {req.recipientDistrict}, {req.recipientUpazila}
+                  </td>
+                  <td className="px-4 py-3">{req.donationDate}</td>
+                  <td className="px-4 py-3">{req.donationTime}</td>
+                  <td className="px-4 py-3">{req.bloodGroup}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                        req.status
+                      )}`}
                     >
-                        View My All Requests
-                    </Button>
+                      {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      {req.status === "inprogress" && (
+                        <>
+                          <button
+                            onClick={() =>
+                              handleStatusUpdate(req._id, "done")
+                            }
+                            title="Mark as Done"
+                            className="hover:text-green-600"
+                          >
+                            ✅
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleStatusUpdate(req._id, "canceled")
+                            }
+                            title="Cancel"
+                            className="hover:text-yellow-600"
+                          >
+                            🚫
+                          </button>
+                        </>
+                      )}
+                      <button
+                        onClick={() => handleView(req._id)}
+                        title="View"
+
+                        className="hover:text-blue-600"
+                      >
+                        <Eye size={16} />
+                      </button>
+                      <button
+                        onClick={() => navigate(`/edit-donation-request/${req._id}`)}
+                        title="Edit"
+                        className="hover:text-green-600"
+                      >
+                        <Pencil size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(req._id)}
+                        title="Delete"
+                        className="hover:text-red-600"
+                      >
+                        <Trash size={16} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (<div className="my-40">
+        <p className="text-gray-500 text-center mb-3">No recent donation requests found.</p>
+        <p className="text-gray-500 text-center">Create Donation <Link to='/dashboard/donation-request' className="text-red-600 underline">here</Link></p>
+        </div>
+      )}
+
+      {/* Details Modal */}
+      {selectedRequest && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-10 relative">
+            <h1 className="text-xl md:text-2xl font-bold mb-4">Donation Request Details</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                ["Requester Name", selectedRequest.requesterName],
+                ["Requester Email", selectedRequest.requesterEmail],
+                ["Recipient Name", selectedRequest.recipientName],
+                ["Recipient District", selectedRequest.recipientDistrict],
+                ["Recipient Upazila", selectedRequest.recipientUpazila],
+                ["Hospital Name", selectedRequest.hospitalName],
+                ["Address", selectedRequest.address],
+                ["Blood Group", selectedRequest.bloodGroup],
+                ["Donation Date", selectedRequest.donationDate],
+                ["Donation Time", selectedRequest.donationTime],
+                ["Request Message", selectedRequest.requestMessage],
+                ["Status", selectedRequest.status],
+                ["Created At", selectedRequest.createdAt],
+              ].map(([label, value], idx) => (
+                <div key={idx} className="flex flex-col border-t pt-4">
+                  <p className="text-gray-500 text-sm">{label}</p>
+                  <p className="text-gray-800 text-sm">{value}</p>
                 </div>
-            )}
-        </section>
-    );
+              ))}
+            </div>
+            <div className="flex justify-end mt-6">
+              <button
+                onClick={() => setSelectedRequest(null)}
+                className="px-5 py-2 bg-gray-200 rounded-lg text-gray-700 font-semibold cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ✅ View All Button */}
+      {donationRequests.length > 0 && (
+        <div className="mt-7 flex justify-center">
+          <Button
+            onClick={() => navigate("/dashboard/my-donation-requests")}
+            className="px-4 py-2 bg-red-600 text-white"
+          >
+            View All Requests
+          </Button>
+        </div>
+      )}
+    </section>
+  );
 };
 
 export default Dashboard;
