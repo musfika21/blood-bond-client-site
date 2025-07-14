@@ -34,7 +34,7 @@ const navItems = [
 
 const DashboardLayout = () => {
 
-    const { user, logout } = useAuth();
+    const { user, currentUser, logout } = useAuth();
     // console.log(user)
     const [sidebarOpen, setSidebarOpen] = useState(false);
 

@@ -6,13 +6,19 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-  PaginationLink,
-  PaginationEllipsis,
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationPrevious,
+    PaginationNext,
+    PaginationLink,
+    PaginationEllipsis,
 } from "@/components/ui/pagination";
 
 const MyDonationRequests = () => {
@@ -129,20 +135,25 @@ const MyDonationRequests = () => {
                 My Donation Requests
             </h2>
 
-            {/* Filter Buttons */}
-            <div className="mb-6 flex flex-wrap gap-2">
-                {["all", "pending", "inprogress", "done", "canceled"].map((status) => (
-                    <button
-                        key={status}
-                        onClick={() => setStatusFilter(status)}
-                        className={`px-3 md:px-4 py-2 rounded-full border text-sm font-medium transition cursor-pointer ${statusFilter === status
-                            ? "bg-red-500 text-white border-red-500 shadow-sm"
-                            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                            }`}
-                    >
-                        {status.charAt(0).toUpperCase() + status.slice(1)}
-                    </button>
-                ))}
+            {/* ✅ Filter Dropdown */}
+            <div className="mb-6">
+                <DropdownMenu>
+                    <DropdownMenuTrigger className="px-4 py-2 border rounded-md bg-white text-gray-700 shadow-sm hover:bg-gray-50">
+                        Filter: {statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1)}
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        {["all", "pending", "inprogress", "done", "canceled"].map((status) => (
+                            <DropdownMenuItem
+                                key={status}
+                                onClick={() => setStatusFilter(status)}
+                                className={`cursor-pointer ${statusFilter === status ? "font-bold text-red-500" : ""
+                                    }`}
+                            >
+                                {status.charAt(0).toUpperCase() + status.slice(1)}
+                            </DropdownMenuItem>
+                        ))}
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
 
             {/* Table */}

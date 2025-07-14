@@ -9,6 +9,7 @@ import {
 } from 'firebase/auth';
 import { AuthContext } from './AuthContext';
 import { auth } from '../Firebase/firebase.init';
+import useAxios from '../CustomHooks/useAxios';
 
 const AuthProvider = ({ children }) => {
 
@@ -16,6 +17,9 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [theme, setTheme] = useState("light");
     const [loading, setLoading] = useState(true);
+    const [currentUser, setCurrentUser] = useState(null);
+
+    const axiosSecure = useAxios(); // etake pore axios secure diye replace kore nibo
 
     useEffect(() => {
         const savedTheme = localStorage.getItem("theme");
@@ -72,10 +76,22 @@ const AuthProvider = ({ children }) => {
         }
     }, [])
 
+    // user of database
+    useEffect(() => {
+        if (user?.email) {
+            axiosSecure.get(`/donors/${user.email}`)
+                .then(res => setCurrentUser(res.data))
+                .catch(err => console.error(err));
+        } else {
+            setCurrentUser(null);
+        }
+    }, [user, axiosSecure]);
+
     // User Info
     const userInfo = {
         user,
         setUser,
+        currentUser,
         createUser,
         updateUserInfo,
         loginUser,
