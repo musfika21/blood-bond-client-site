@@ -159,7 +159,7 @@ const Dashboard = () => {
                               handleStatusUpdate(req._id, "done")
                             }
                             title="Mark as Done"
-                            className="hover:text-green-600"
+                            className="hover:text-green-600 cursor-pointer"
                           >
                             ✅
                           </button>
@@ -168,7 +168,7 @@ const Dashboard = () => {
                               handleStatusUpdate(req._id, "canceled")
                             }
                             title="Cancel"
-                            className="hover:text-yellow-600"
+                            className="hover:text-yellow-600 cursor-pointer"
                           >
                             🚫
                           </button>
@@ -178,21 +178,21 @@ const Dashboard = () => {
                         onClick={() => handleView(req._id)}
                         title="View"
 
-                        className="hover:text-blue-600"
+                        className="hover:text-blue-600 cursor-pointer"
                       >
                         <Eye size={16} />
                       </button>
                       <button
-                        onClick={() => navigate(`/edit-donation-request/${req._id}`)}
+                        onClick={() => navigate(`/dashboard/update-donation-request/${req._id}`)}
                         title="Edit"
-                        className="hover:text-green-600"
+                        className="hover:text-green-600 cursor-pointer"
                       >
                         <Pencil size={16} />
                       </button>
                       <button
                         onClick={() => handleDelete(req._id)}
                         title="Delete"
-                        className="hover:text-red-600"
+                        className="hover:text-red-600 cursor-pointer"
                       >
                         <Trash size={16} />
                       </button>

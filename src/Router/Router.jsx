@@ -12,6 +12,8 @@ import Dashboard from '../Pages/Dashboard/Dashboard';
 import MyDonationRequests from '../Pages/Dashboard/MyDonationRequests';
 import ProfilePage from '../Pages/Dashboard/ProfilePage';
 import CreateDonationRequest from '../Pages/Dashboard/CreateDonationRequest';
+import EditDonationRequest from '../Pages/Dashboard/EditDonationRequest';
+import Loader from '../shared/Loader';
 
 const Router = createBrowserRouter([
     {
@@ -51,6 +53,12 @@ const Router = createBrowserRouter([
             {
                 path: 'donation-request',
                 Component: CreateDonationRequest
+            },
+            {
+                path: 'update-donation-request/:id',
+                loader: ({ params }) => fetch(`${import.meta.env.VITE_SERVER_API}/donation-requests/${params.id}`),
+                HydrateFallback: <Loader/>,
+                Component: EditDonationRequest
             }
         ]
     },
