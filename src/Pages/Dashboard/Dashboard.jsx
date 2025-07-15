@@ -1,13 +1,13 @@
 import React from 'react';
 import useAuth from '../../CustomHooks/useAuth';
-import { Heart, Loader } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import DonorHome from './DonorHome';
 import AdminHome from './AdminHome';
 import { motion } from "framer-motion";
+import Loader from '../../shared/Loader';
 
 const Dashboard = () => {
   const { currentUser } = useAuth();
-  console.log(currentUser)
 
   if (!currentUser) {
     return <Loader />
@@ -15,7 +15,6 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* ✅ Welcome */}
       <motion.div
         className="mb-4 px-4 py-6"
         initial={{ opacity: 0, y: -20 }}

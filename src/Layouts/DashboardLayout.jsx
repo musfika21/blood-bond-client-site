@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet, NavLink, Link, href } from "react-router";
+import { Outlet, NavLink, Link } from "react-router";
 import { cn } from "@/lib/utils";
 import {
     Sheet,
@@ -13,30 +13,29 @@ import useAuth from "../CustomHooks/useAuth";
 import { Toaster } from "react-hot-toast";
 import Swal from "sweetalert2";
 
-const navItems = [
-    {
-        name: "Home",
-        href: "/dashboard/home"
-    },
-    {
-        name: "Create Donation Request",
-        href: '/dashboard/donation-request'
-    },
-    {
-        name: "My Donation Requests",
-        href: '/dashboard/my-donation-requests'
-    },
-    {
-        name: "Profile",
-        href: '/dashboard/profile'
-    }
-];
+// ✅ 1️⃣ Role based nav config
+const NAV_ITEMS = {
+    donor: [
+        { name: "Home", href: "/dashboard/home" },
+        { name: "Create Donation Request", href: "/dashboard/donation-request" },
+        { name: "My Donation Requests", href: "/dashboard/my-donation-requests" },
+        { name: "Profile", href: "/dashboard/profile" },
+    ],
+    admin: [
+        { name: "Home", href: "/dashboard/home" },
+        { name: "All Users", href: "/dashboard/all-users" },
+        { name: "Manage Donations", href: "/dashboard/manage-donations" },
+        { name: "Profile", href: "/dashboard/profile" },
+    ],
+};
 
 const DashboardLayout = () => {
-
     const { user, currentUser, logout } = useAuth();
-    // console.log(user)
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    // ✅ 2️⃣ Role থেকে navItems বের করো
+    const role = currentUser?.role || 'donor'; // fallback role
+    const navItems = NAV_ITEMS[role] || [];
 
     const handleLogout = () => {
         Swal.fire({
@@ -45,7 +44,7 @@ const DashboardLayout = () => {
             draggable: true,
         });
         logout();
-    }
+    };
 
     return (
         <div className="flex min-h-screen">
@@ -155,12 +154,18 @@ const DashboardLayout = () => {
             {/* Main Content + Outlet */}
             <main className="flex-1 bg-gray-50">
                 {/* Top Navbar */}
-                <div className="hidden bg-red-50 p-3 md:flex justify-end items-center">
-                    <div className="h-10 w-10 rounded-full">
-                        <img className="object-cover rounded-lg" src={user.photoURL} alt="" />
+                <div className="hidden md:flex justify-end items-center bg-red-50 px-6 py-3">
+                    <div className="flex items-center gap-3">
+                        <div className="text-sm font-medium text-gray-700">
+                            {currentUser?.name || "User"}
+                        </div>
+                        <img
+                            className="h-13 w-13 rounded-full object-cover ring-2 ring-red-400 shadow-sm transition duration-200 hover:ring-red-700 cursor-pointer"
+                            src={currentUser?.avatar || photo}
+                            alt="Profile"
+                        />
                     </div>
                 </div>
-
                 <Outlet />
                 <Toaster />
             </main>

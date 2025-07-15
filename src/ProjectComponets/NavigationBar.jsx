@@ -85,7 +85,8 @@ const NavLinks = ({ user }) => (
 );
 
 const NavigationBar = () => {
-    const { user, logout } = useAuth();
+    const { user, currentUser, logout } = useAuth();
+    console.log(currentUser)
     const [open, setOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     // const {donor} = useUserFromDB();
@@ -138,10 +139,10 @@ const NavigationBar = () => {
                     user ? <>
                         <div className="mr-3 cursor-pointer" onClick={() => setSidebarOpen(!sidebarOpen)}>
                             {
-                                user?.photoURL ? (
+                                currentUser?.avatar ? (
                                     <img
                                         className="w-10 h-10 sm:w-12 sm:h-12 md:w-13 md:h-13 lg:w-15 lg:h-15 rounded-full border lg:border-3 border-red-700"
-                                        src={user?.photoURL}
+                                        src={currentUser?.avatar}
                                         alt="profile picture"
                                     />
                                 ) : (
