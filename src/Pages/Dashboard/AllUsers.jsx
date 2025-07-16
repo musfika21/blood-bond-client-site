@@ -8,19 +8,19 @@ import {
     Users,
 } from "lucide-react";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import {
     DropdownMenu,
     DropdownMenuTrigger,
     DropdownMenuContent,
     DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationPrevious,
+    PaginationNext,
+    PaginationLink,
+} from "@/components/ui/pagination";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import toast from "react-hot-toast";
 
@@ -28,36 +28,32 @@ const AllUsers = () => {
     const axiosSecure = useAxios();
     const [users, setUsers] = useState([]);
     const [statusFilter, setStatusFilter] = useState("");
-    const [page, setPage] = useState(1);
-    const [total, setTotal] = useState(0);
-    const limit = 10;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(0);
+    const limit = 5;
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const res = await axiosSecure.get(
-                    `/donors?page=${page}&limit=${limit}&status=${statusFilter}`
+                    `/donors?page=${currentPage}&limit=${limit}&status=${statusFilter}`
                 );
                 setUsers(res.data.users || []);
-                setTotal(res.data.total || 0);
+                setTotalCount(res.data.total || 0);
             } catch (err) {
                 console.error(err);
                 setUsers([]);
             }
         };
         fetchUsers();
-    }, [page, statusFilter, axiosSecure]);
+    }, [currentPage, statusFilter, axiosSecure]);
 
     const handleBlockToggle = async (id, currentStatus) => {
         const newStatus = currentStatus === "active" ? "blocked" : "active";
         await axiosSecure.patch(`/donors/${id}/status`, { status: newStatus });
-        toast.success(
-            `User ${newStatus === "active" ? "unblocked" : "blocked"}!`
-        );
+        toast.success(`User ${newStatus === "active" ? "unblocked" : "blocked"}!`);
         setUsers((prev) =>
-            prev.map((u) =>
-                u._id === id ? { ...u, status: newStatus } : u
-            )
+            prev.map((u) => (u._id === id ? { ...u, status: newStatus } : u))
         );
     };
 
@@ -69,15 +65,15 @@ const AllUsers = () => {
         );
     };
 
-    const totalPages = Math.max(Math.ceil(total / limit), 1);
+    const totalPages = Math.ceil(totalCount / limit);
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
-            <h1 className="text-2xl md:text-3xl font-bold mb-4">
+            <h1 className="text-2xl md:text-3xl font-bold mb-6">
                 All Users
             </h1>
 
-            {/* Filter */}
+            {/* ✅ Filter Dropdown */}
             <div className="mb-6">
                 <DropdownMenu>
                     <DropdownMenuTrigger className="px-4 py-2 border rounded-md bg-white text-gray-700 shadow-sm hover:bg-gray-50">
@@ -97,51 +93,48 @@ const AllUsers = () => {
                 </DropdownMenu>
             </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Avatar</TableHead>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Role</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {users && users.length > 0 ? (
+            {/* ✅ Table */}
+            <div className="overflow-x-auto rounded border shadow">
+                <table className="min-w-full text-sm">
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th className="px-4 py-3 text-left font-bold text-gray-600">Avatar</th>
+                            <th className="px-4 py-3 text-left font-bold text-gray-600">Name</th>
+                            <th className="px-4 py-3 text-left font-bold text-gray-600">Email</th>
+                            <th className="px-4 py-3 text-left font-bold text-gray-600">Role</th>
+                            <th className="px-4 py-3 text-left font-bold text-gray-600">Status</th>
+                            <th className="px-4 py-3 text-left font-bold text-gray-600">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white">
+                        {users.length > 0 ? (
                             users.map((user) => (
-                                <TableRow key={user._id}>
-                                    <TableCell>
+                                <tr key={user._id} className="border-t hover:bg-gray-50 transition">
+                                    <td className="px-4 py-3">
                                         <Avatar className="w-10 h-10">
                                             <AvatarImage
-                                                src={
-                                                    user.avatar ||
-                                                    `https://i.pravatar.cc/150?u=${user._id}`
-                                                }
+                                                src={user.avatar || `https://i.pravatar.cc/150?u=${user._id}`}
                                                 alt={user.name}
                                             />
                                         </Avatar>
-                                    </TableCell>
-                                    <TableCell>{user.name}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
-                                    <TableCell>{user.role}</TableCell>
-                                    <TableCell>
+                                    </td>
+                                    <td className="px-4 py-3">{user.name}</td>
+                                    <td className="px-4 py-3">{user.email}</td>
+                                    <td className="px-4 py-3 capitalize">{user.role}</td>
+                                    <td className="px-4 py-3">
                                         <span
-                                            className={`px-3 py-1 rounded-full text-xs font-semibold 
-                                                ${user.status === "active"
+                                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                user.status === "active"
                                                     ? "bg-green-100 text-green-700"
                                                     : user.status === "blocked"
-                                                        ? "bg-red-100 text-red-700"
-                                                        : "bg-gray-100 text-gray-700"
-                                                }`}
+                                                    ? "bg-red-100 text-red-700"
+                                                    : "bg-gray-200 text-gray-700"
+                                            }`}
                                         >
                                             {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
                                         </span>
-                                    </TableCell>
-                                    <TableCell>
+                                    </td>
+                                    <td className="px-4 py-3">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger className="p-2 hover:bg-gray-100 rounded-full">
                                                 <MoreVertical className="w-5 h-5" />
@@ -149,82 +142,91 @@ const AllUsers = () => {
                                             <DropdownMenuContent>
                                                 {user.status === "active" ? (
                                                     <DropdownMenuItem
-                                                        onClick={() =>
-                                                            handleBlockToggle(user._id, user.status)
-                                                        }
+                                                        onClick={() => handleBlockToggle(user._id, user.status)}
                                                     >
                                                         <UserX className="w-4 h-4 mr-2" /> Block
                                                     </DropdownMenuItem>
                                                 ) : (
                                                     <DropdownMenuItem
-                                                        onClick={() =>
-                                                            handleBlockToggle(user._id, user.status)
-                                                        }
+                                                        onClick={() => handleBlockToggle(user._id, user.status)}
                                                     >
                                                         <UserCheck className="w-4 h-4 mr-2" /> Unblock
                                                     </DropdownMenuItem>
                                                 )}
                                                 {user.role !== "volunteer" && (
                                                     <DropdownMenuItem
-                                                        onClick={() =>
-                                                            handleRoleChange(user._id, "volunteer")
-                                                        }
+                                                        onClick={() => handleRoleChange(user._id, "volunteer")}
                                                     >
                                                         <Users className="w-4 h-4 mr-2" /> Make Volunteer
                                                     </DropdownMenuItem>
                                                 )}
                                                 {user.role !== "admin" && (
                                                     <DropdownMenuItem
-                                                        onClick={() =>
-                                                            handleRoleChange(user._id, "admin")
-                                                        }
+                                                        onClick={() => handleRoleChange(user._id, "admin")}
                                                     >
                                                         <Shield className="w-4 h-4 mr-2" /> Make Admin
                                                     </DropdownMenuItem>
                                                 )}
                                             </DropdownMenuContent>
                                         </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
+                                    </td>
+                                </tr>
                             ))
                         ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={6}
-                                    className="text-center py-8 text-gray-500"
-                                >
+                            <tr>
+                                <td colSpan={6} className="text-center px-4 py-6 text-gray-500">
                                     No users found.
-                                </TableCell>
-                            </TableRow>
+                                </td>
+                            </tr>
                         )}
-                    </TableBody>
-                </Table>
+                    </tbody>
+                </table>
             </div>
 
-            {/* Pagination */}
-            <div className="flex justify-center gap-4 mt-6">
-                <button
-                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                    disabled={page <= 1}
-                    className="px-3 py-1 border rounded disabled:opacity-50"
-                >
-                    Prev
-                </button>
-                <span>
-                    Page {page} of {totalPages}
-                </span>
-                <button
-                    onClick={() =>
-                        setPage((prev) =>
-                            prev < totalPages ? prev + 1 : totalPages
-                        )
-                    }
-                    disabled={page >= totalPages}
-                    className="px-3 py-1 border rounded disabled:opacity-50"
-                >
-                    Next
-                </button>
-            </div>
+            {/* ✅ Pagination */}
+            {totalPages > 1 && (
+                <Pagination className="mt-8 flex justify-center">
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                href="#"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (currentPage > 1) setCurrentPage(currentPage - 1);
+                                }}
+                                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                            />
+                        </PaginationItem>
+
+                        {[...Array(totalPages)].map((_, index) => (
+                            <PaginationItem key={index}>
+                                <PaginationLink
+                                    href="#"
+                                    isActive={currentPage === index + 1}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setCurrentPage(index + 1);
+                                    }}
+                                    className="data-[active=true]:bg-red-500 data-[active=true]:text-white"
+                                >
+                                    {index + 1}
+                                </PaginationLink>
+                            </PaginationItem>
+                        ))}
+
+                        <PaginationItem>
+                            <PaginationNext
+                                href="#"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                                }}
+                                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
+            )}
         </div>
     );
 };

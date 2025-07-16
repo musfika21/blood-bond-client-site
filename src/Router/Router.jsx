@@ -16,6 +16,9 @@ import EditDonationRequest from '../Pages/Dashboard/EditDonationRequest';
 import Loader from '../shared/Loader';
 import path from 'path';
 import AllUsers from '../Pages/Dashboard/AllUsers';
+import AllDonations from '../Pages/Dashboard/AllDonations';
+import PendingDonationRequests from '../Pages/DonationRequests/PendingDonationRequests';
+import DonationRequestDetails from '../Pages/DonationRequests/DonationRequestDetails';
 
 const Router = createBrowserRouter([
     {
@@ -33,7 +36,18 @@ const Router = createBrowserRouter([
             {
                 path: 'search-donor',
                 Component: SearchDonor
+            },
+            {
+                path: 'pending-donation-requests',
+                Component: PendingDonationRequests
+            },
+            {
+                path: 'donation-requests/:id',
+                loader: ({ params }) => fetch(`${import.meta.env.VITE_SERVER_API}/donation-requests/${params.id}`),
+                HydrateFallback: <Loader/>,
+                element: <PrivateRoutes><DonationRequestDetails/></PrivateRoutes>
             }
+            
         ]
     },
     {
@@ -65,8 +79,11 @@ const Router = createBrowserRouter([
             {
                 path: 'all-users',
                 Component: AllUsers
+            },
+            {
+                path: 'all-donations',
+                Component: AllDonations
             }
-            
         ]
     },
     {

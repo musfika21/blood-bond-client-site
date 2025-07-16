@@ -24,7 +24,7 @@ const NAV_ITEMS = {
     admin: [
         { name: "Home", href: "/dashboard/home" },
         { name: "All Users", href: "/dashboard/all-users" },
-        { name: "Manage Donations", href: "/dashboard/manage-donations" },
+        { name: "All Donations", href: "/dashboard/all-donations" },
         { name: "Profile", href: "/dashboard/profile" },
     ],
 };

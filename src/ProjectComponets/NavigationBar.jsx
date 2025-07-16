@@ -13,7 +13,7 @@ const NavLinks = ({ user }) => (
         <li className="text-lg flex items-center space-x-2">
             <NavLink to="/" className="relative inline-block group px-1 py-0.5">
                 {({ isActive }) => (
-                    <span className={`relative inline-block hover:text-red-600 ${isActive ? 'text-red-600 font-semibold' : 'text-gray-800'}`}>
+                    <span className={`relative text-sm inline-block hover:text-red-600 ${isActive ? 'text-red-600 font-semibold' : 'text-gray-800'}`}>
                         Home
                         <span
                             className={`absolute left-0 -bottom-1 h-[2px] bg-red-600 transition-all duration-300 ${isActive ? 'w-full' : 'w-0'
@@ -25,9 +25,9 @@ const NavLinks = ({ user }) => (
         </li>
 
         <li className="text-lg flex items-center space-x-2">
-            <NavLink to="/categories" className="relative inline-block group px-1 py-0.5">
+            <NavLink to="/pending-donation-requests" className="relative inline-block group px-1 py-0.5">
                 {({ isActive }) => (
-                    <span className={`relative inline-block hover:text-red-600 ${isActive ? 'text-red-600 font-semibold' : 'text-gray-800'}`}>
+                    <span className={`relative text-sm inline-block hover:text-red-600 ${isActive ? 'text-red-600 font-semibold' : 'text-gray-800'}`}>
                         Donation Requests
                         <span
                             className={`absolute left-0 -bottom-1 h-[2px] bg-red-600 transition-all duration-300 ${isActive ? 'w-full' : 'w-0'
@@ -41,7 +41,7 @@ const NavLinks = ({ user }) => (
         <li className="text-lg flex items-center space-x-2">
             <NavLink to="/blogs" className="relative inline-block group px-1 py-0.5">
                 {({ isActive }) => (
-                    <span className={`relative inline-block hover:text-red-600 ${isActive ? 'text-red-600 font-semibold' : 'text-gray-800'}`}>
+                    <span className={`relative text-sm inline-block hover:text-red-600 ${isActive ? 'text-red-600 font-semibold' : 'text-gray-800'}`}>
                         Blog
                         <span
                             className={`absolute left-0 -bottom-1 h-[2px] bg-red-600 transition-all duration-300 ${isActive ? 'w-full' : 'w-0'
@@ -56,7 +56,7 @@ const NavLinks = ({ user }) => (
             <li className="text-lg flex items-center space-x-2">
                 <NavLink to="/funding" className="relative inline-block group px-1 py-0.5">
                     {({ isActive }) => (
-                        <span className={`relative inline-block hover:text-red-600 ${isActive ? 'text-red-600 font-semibold' : 'text-gray-800'}`}>
+                        <span className={`relative text-sm inline-block hover:text-red-600 ${isActive ? 'text-red-600 font-semibold' : 'text-gray-800'}`}>
                             Funding
                             <span
                                 className={`absolute left-0 -bottom-1 h-[2px] bg-red-600 transition-all duration-300 ${isActive ? 'w-full' : 'w-0'
@@ -66,10 +66,11 @@ const NavLinks = ({ user }) => (
                     )}
                 </NavLink>
             </li>
+
             <li className="text-lg flex items-center space-x-2">
                 <NavLink to="/dashboard/home" className="relative inline-block group px-1 py-0.5">
                     {({ isActive }) => (
-                        <span className={`relative inline-block hover:text-red-600 ${isActive ? 'text-red-600 font-semibold' : 'text-gray-800'}`}>
+                        <span className={`relative text-sm inline-block hover:text-red-600 ${isActive ? 'text-red-600 font-semibold' : 'text-gray-800'}`}>
                             Dashboard
                             <span
                                 className={`absolute left-0 -bottom-1 h-[2px] bg-red-600 transition-all duration-300 ${isActive ? 'w-full' : 'w-0'
@@ -79,18 +80,14 @@ const NavLinks = ({ user }) => (
                     )}
                 </NavLink>
             </li>
-
         </>}
     </>
 );
 
 const NavigationBar = () => {
     const { user, currentUser, logout } = useAuth();
-    console.log(currentUser)
     const [open, setOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    // const {donor} = useUserFromDB();
-    // console.log('user from db', donor)
 
     const handleSignOut = () => {
         Swal.fire({

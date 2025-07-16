@@ -52,13 +52,23 @@ const AuthProvider = ({ children }) => {
     }
 
     // update user profile
-    const updateUserInfo = ({ displayName, photoURL }) => {
-        setLoading(true)
-        return updateProfile(auth.currentUser, {
+    const updateUserInfo = async ({ displayName, photoURL }) => {
+        setLoading(true);
+
+        await updateProfile(auth.currentUser, {
             displayName: displayName || auth.currentUser?.displayName,
             photoURL: photoURL || auth.currentUser?.photoURL
         });
+
+        // ✅ Force Firebase to re-fetch fresh profile
+        await auth.currentUser.reload();
+
+        // ✅ Now update local state
+        setUser(auth.currentUser);
+
+        setLoading(false);
     };
+
 
     // Logout User
     const logout = () => {
@@ -76,6 +86,7 @@ const AuthProvider = ({ children }) => {
         }
     }, [])
 
+    console.log(currentUser)
     // user of database
     useEffect(() => {
         if (user?.email) {

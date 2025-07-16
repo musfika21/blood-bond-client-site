@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useAxios from '../CustomHooks/useAxios';
-import { Button } from '@/components/ui/button'; // যদি shadcn button use করো!
+import { Button } from '@/components/ui/button';
 
 const SearchDonor = () => {
     const axiosSecure = useAxios();
@@ -14,14 +14,13 @@ const SearchDonor = () => {
     });
     const [donors, setDonors] = useState([]);
 
-    // ✅ Get districts on mount
+
     useEffect(() => {
         axiosSecure.get('/districts')
             .then(res => setDistricts(res.data))
             .catch(err => console.error(err));
     }, [axiosSecure]);
 
-    // ✅ Get upazilas when district changes
     useEffect(() => {
         if (selectedDistrict) {
             axiosSecure.get(`/upazillas/${selectedDistrict}`)
@@ -44,11 +43,17 @@ const SearchDonor = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Search Query:', formData);
-        axiosSecure.get('/donors', { params: formData })
+        const encodedFormData = {
+            ...formData,
+            bloodGroup: encodeURIComponent(formData.bloodGroup),
+        };
+        axiosSecure.get('/donors-search', {
+            params: encodedFormData,
+        })
             .then(res => setDonors(res.data))
             .catch(err => console.error(err));
     };
+    console.log(donors)
 
     return (
         <section className="p-4 md:p-8">
@@ -61,7 +66,7 @@ const SearchDonor = () => {
                     value={formData.bloodGroup}
                     onChange={handleChange}
                     required
-                    className="border px-4 py-2 rounded-md"
+                    className="border px-4 py-2 rounded-md w-full cursor-pointer"
                 >
                     <option value="">Select Blood Group</option>
                     {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(bg => (
@@ -75,7 +80,7 @@ const SearchDonor = () => {
                     value={formData.district}
                     onChange={handleChange}
                     required
-                    className="border px-4 py-2 rounded-md"
+                    className="border px-4 py-2 rounded-md w-full cursor-pointer"
                 >
                     <option value="">Select District</option>
                     {districts.map(d => (
@@ -88,9 +93,8 @@ const SearchDonor = () => {
                     name="upazila"
                     value={formData.upazila}
                     onChange={handleChange}
-                    required
                     disabled={!selectedDistrict}
-                    className="border px-4 py-2 rounded-md"
+                    className="border px-4 py-2 rounded-md w-full cursor-pointer"
                 >
                     <option value="">Select Upazila</option>
                     {upazilas.map(u => (
@@ -109,21 +113,43 @@ const SearchDonor = () => {
             {/* Donor Results */}
             <div>
                 {donors.length === 0 ? (
-                    <p className="text-gray-600">No donors found. Please search above.</p>
+                    <p className="text-gray-600 text-center">No donors found. Please search above.</p>
                 ) : (
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {donors.map((donor) => (
-                            <div key={donor._id} className="border p-4 rounded-lg shadow-sm">
-                                <h3 className="text-lg font-bold text-red-600">{donor.name}</h3>
-                                <p>Blood Group: {donor.bloodGroup}</p>
-                                <p>District: {donor.district}</p>
-                                <p>Upazila: {donor.upazila}</p>
-                                <p>Phone: {donor.phone}</p>
+                            <div className="flex items-center border border-gray-200 rounded-lg p-4 w-fit bg-white">
+                                {/* Icon or Avatar */}
+                                <div className="flex-shrink-0">
+                                    <div className="flex items-center justify-center">
+                                        <img className="h-18 w-18 md:h-25 md:w-25" src={donor.avatar} alt="" />
+                                    </div>
+                                </div>
+
+                                {/* Info */}
+                                <div className="ml-4 space-y-1 text-sm">
+                                    <p>
+                                        <span className="font-bold">Name:</span> &nbsp;
+                                        <span className="font-semibold">{donor.name}</span>
+                                    </p>
+                                    <p>
+                                        <span className="font-bold">Group:</span> &nbsp;
+                                        <span className="font-semibold">{donor.bloodGroup}</span>
+                                    </p>
+                                    <p>
+                                        <span className="font-bold">District:</span> &nbsp;
+                                        <span className="font-semibold">
+                                            {districts.find(d => d._id === donor.districtId)?.name || donor.districtName || donor.districtId}
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
+
+
                         ))}
                     </div>
                 )}
             </div>
+
         </section>
     );
 };

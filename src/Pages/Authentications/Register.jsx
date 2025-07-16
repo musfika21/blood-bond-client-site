@@ -111,7 +111,7 @@ const Register = () => {
                 email: data.email,
                 avatar: avatarUrl,
                 bloodGroup: data.bloodGroup,
-                 districtId: selectedDistrictId,
+                districtId: selectedDistrictId,
                 districtName: selectedDistrictName,
                 upazillaId: selectedUpazillaId,
                 upazillaName: selectedUpazillaName,
