@@ -86,7 +86,6 @@ const AuthProvider = ({ children }) => {
         }
     }, [])
 
-    console.log(currentUser)
     // user of database
     useEffect(() => {
         if (user?.email) {
@@ -98,11 +97,14 @@ const AuthProvider = ({ children }) => {
         }
     }, [user, axiosSecure]);
 
+    console.log("current user in the auth context",currentUser)
+
     // User Info
     const userInfo = {
         user,
         setUser,
         currentUser,
+        setCurrentUser,
         createUser,
         updateUserInfo,
         loginUser,

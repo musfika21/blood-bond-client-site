@@ -8,9 +8,10 @@ import { Button } from "@material-tailwind/react";
 import { IoEye } from "react-icons/io5";
 import { PiEyeClosedBold } from "react-icons/pi";
 import axios from "axios";
+import { auth } from "../../Firebase/firebase.init";
 
 const Register = () => {
-    const { createUser, updateUserInfo } = useAuth();
+    const { createUser, updateUserInfo, setCurrentUser, setUser } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const axiosSecure = useAxios();
@@ -71,7 +72,6 @@ const Register = () => {
         return res.data.data.url;
     };
 
-    // ✅ Submit Handler
     const onSubmit = async (data) => {
         try {
             if (data.password !== data.confirmPassword) {
@@ -122,6 +122,7 @@ const Register = () => {
 
             const response = await axiosSecure.post("/donors", saveUser);
             if (response.data.inserted === false) {
+                setCurrentUser(response.data.savedUser);
                 Swal.fire({
                     title: "Warning!",
                     text: "User already exists!",
@@ -133,6 +134,9 @@ const Register = () => {
                 });
                 return;
             }
+
+            // ✅ Set currentUser immediately after successful insertion
+            setCurrentUser(saveUser);
 
             Swal.fire({
                 title: "Success!",

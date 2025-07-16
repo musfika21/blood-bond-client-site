@@ -27,6 +27,11 @@ const NAV_ITEMS = {
         { name: "All Donations", href: "/dashboard/all-donations" },
         { name: "Profile", href: "/dashboard/profile" },
     ],
+    volunteer : [
+        { name: "Home", href: "/dashboard/home" },
+        { name: "All Donations", href: "/dashboard/all-donations" },
+        { name: "Profile", href: "/dashboard/profile" },
+    ]
 };
 
 const DashboardLayout = () => {

@@ -86,6 +86,8 @@ const NavLinks = ({ user }) => (
 
 const NavigationBar = () => {
     const { user, currentUser, logout } = useAuth();
+    console.log("user", user)
+    console.log("current user", currentUser)
     const [open, setOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
 

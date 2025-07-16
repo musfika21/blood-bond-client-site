@@ -18,10 +18,13 @@ import {
     PaginationNext,
     PaginationLink,
 } from "@/components/ui/pagination";
+import useAuth from "../../CustomHooks/useAuth";
 
 const AllDonations = () => {
     const axios = useAxios();
     const axiosSecure = useAxios();
+    const { currentUser } = useAuth();
+    // console.log(user)
 
     const [donations, setDonations] = useState([]);
     const [filteredDonations, setFilteredDonations] = useState([]);
@@ -153,9 +156,12 @@ const AllDonations = () => {
                             <th className="px-4 py-3 text-left font-bold text-gray-600">
                                 Details
                             </th>
-                            <th className="px-4 py-3 text-left font-bold text-gray-600">
-                                Actions
-                            </th>
+                            {
+                                currentUser?.role === 'admin' &&
+                                <th className="px-4 py-3 text-left font-bold text-gray-600">
+                                    Actions
+                                </th>
+                            }
                         </tr>
                     </thead>
                     <tbody className="bg-white">
@@ -188,39 +194,43 @@ const AllDonations = () => {
                                             <Eye size={16} />
                                         </button>
                                     </td>
-                                    <td className="px-4 py-3">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger className="p-2 rounded-full hover:bg-gray-200 cursor-pointer">
-                                                <MoreVertical size={18} />
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <DropdownMenuItem
-                                                    onClick={() => handleStatusUpdate(req._id, "inprogress")}
-                                                    className="flex items-center gap-2 cursor-pointer"
-                                                >
-                                                    🕒 Inprogress
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    onClick={() => handleStatusUpdate(req._id, "done")}
-                                                    className="flex items-center gap-2 cursor-pointer"
-                                                >
-                                                    ✅ Done
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    onClick={() => handleStatusUpdate(req._id, "canceled")}
-                                                    className="flex items-center gap-2 cursor-pointer"
-                                                >
-                                                    🚫 Cancel
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </td>
+                                    {/* actions only for admin */}
+                                    {
+                                        currentUser?.role === 'admin' &&
+                                        <td className="px-4 py-3">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger className="p-2 rounded-full hover:bg-gray-200 cursor-pointer">
+                                                    <MoreVertical size={18} />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuItem
+                                                        onClick={() => handleStatusUpdate(req._id, "inprogress")}
+                                                        className="flex items-center gap-2 cursor-pointer"
+                                                    >
+                                                        🕒 Inprogress
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        onClick={() => handleStatusUpdate(req._id, "done")}
+                                                        className="flex items-center gap-2 cursor-pointer"
+                                                    >
+                                                        ✅ Done
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        onClick={() => handleStatusUpdate(req._id, "canceled")}
+                                                        className="flex items-center gap-2 cursor-pointer"
+                                                    >
+                                                        🚫 Cancel
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </td>
+                                    }
 
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="8" className="text-center px-4 py-6 text-gray-500">
+                                <td colSpan={currentUser?.role === 'admin' ? 8 : 7} className="text-center px-4 py-6 text-gray-500">
                                     No donation requests found.
                                 </td>
                             </tr>
