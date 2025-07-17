@@ -22,6 +22,8 @@ import ContentManagement from '../Pages/Blog/ContentManagement';
 import AddBlog from '../Pages/Blog/AddBlog';
 import Blog from '../Pages/Blog/Blog';
 import BlogDetails from '../Pages/Blog/BlogDetails';
+import Fund from '../Pages/Fundings/Fund';
+import AddFund from '../Pages/Fundings/AddFund';
 
 
 const Router = createBrowserRouter([
@@ -56,6 +58,14 @@ const Router = createBrowserRouter([
                 loader: ({ params }) => fetch(`${import.meta.env.VITE_SERVER_API}/blogs/${params.id}`),
                 hydrateFallbackElement: <Loader />,
                 element: <PrivateRoutes><BlogDetails /></PrivateRoutes>
+            },
+            {
+                path: '/funding',
+                element: <PrivateRoutes><Fund/></PrivateRoutes>
+            },
+            {
+                path: '/add-fund',
+                element: <PrivateRoutes><AddFund/></PrivateRoutes>
             }
 
         ]
