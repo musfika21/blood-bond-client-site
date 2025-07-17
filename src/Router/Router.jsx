@@ -3,7 +3,6 @@ import { createBrowserRouter } from 'react-router';
 import BasicLayout from '../Layouts/BasicLayout';
 import Home from '../Pages/HomePage/Home';
 import Register from '../Pages/Authentications/Register';
-import Blog from '../Pages/Blog/Blog';
 import Login from '../Pages/Authentications/Login';
 import DashboardLayout from '../Layouts/DashboardLayout';
 import PrivateRoutes from '../Routes/PrivateRoute';
@@ -19,6 +18,11 @@ import AllUsers from '../Pages/Dashboard/AllUsers';
 import AllDonations from '../Pages/Dashboard/AllDonations';
 import PendingDonationRequests from '../Pages/DonationRequests/PendingDonationRequests';
 import DonationRequestDetails from '../Pages/DonationRequests/DonationRequestDetails';
+import ContentManagement from '../Pages/Blog/ContentManagement';
+import AddBlog from '../Pages/Blog/AddBlog';
+import Blog from '../Pages/Blog/Blog';
+import BlogDetails from '../Pages/Blog/BlogDetails';
+
 
 const Router = createBrowserRouter([
     {
@@ -44,15 +48,21 @@ const Router = createBrowserRouter([
             {
                 path: 'donation-requests/:id',
                 loader: ({ params }) => fetch(`${import.meta.env.VITE_SERVER_API}/donation-requests/${params.id}`),
-                HydrateFallback: <Loader/>,
-                element: <PrivateRoutes><DonationRequestDetails/></PrivateRoutes>
+                HydrateFallback: <Loader />,
+                element: <PrivateRoutes><DonationRequestDetails /></PrivateRoutes>
+            },
+            {
+                path: 'blog-details/:id',
+                loader: ({ params }) => fetch(`${import.meta.env.VITE_SERVER_API}/blogs/${params.id}`),
+                hydrateFallbackElement: <Loader />,
+                element: <PrivateRoutes><BlogDetails /></PrivateRoutes>
             }
-            
+
         ]
     },
     {
         path: 'dashboard',
-        element: <PrivateRoutes><DashboardLayout/></PrivateRoutes>,
+        element: <PrivateRoutes><DashboardLayout /></PrivateRoutes>,
         children: [
             {
                 path: 'home',
@@ -73,7 +83,7 @@ const Router = createBrowserRouter([
             {
                 path: 'update-donation-request/:id',
                 loader: ({ params }) => fetch(`${import.meta.env.VITE_SERVER_API}/donation-requests/${params.id}`),
-                HydrateFallback: <Loader/>,
+                HydrateFallback: <Loader />,
                 Component: EditDonationRequest
             },
             {
@@ -83,7 +93,16 @@ const Router = createBrowserRouter([
             {
                 path: 'all-donations',
                 Component: AllDonations
-            }
+            },
+            {
+                path: "content-management",
+                Component: ContentManagement
+            },
+            {
+                path: 'content-management/add-blog',
+                Component: AddBlog
+            },
+
         ]
     },
     {

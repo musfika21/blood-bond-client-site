@@ -97,8 +97,6 @@ const AuthProvider = ({ children }) => {
         }
     }, [user, axiosSecure]);
 
-    console.log("current user in the auth context",currentUser)
-
     // User Info
     const userInfo = {
         user,

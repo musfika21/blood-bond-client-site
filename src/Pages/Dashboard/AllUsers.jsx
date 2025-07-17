@@ -136,7 +136,7 @@ const AllUsers = () => {
                                     </td>
                                     <td className="px-4 py-3">
                                         <DropdownMenu>
-                                            <DropdownMenuTrigger className="p-2 hover:bg-gray-100 rounded-full">
+                                            <DropdownMenuTrigger className="p-2 hover:bg-gray-100 rounded-full cursor-pointer">
                                                 <MoreVertical className="w-5 h-5" />
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
@@ -151,6 +151,13 @@ const AllUsers = () => {
                                                         onClick={() => handleBlockToggle(user._id, user.status)}
                                                     >
                                                         <UserCheck className="w-4 h-4 mr-2" /> Unblock
+                                                    </DropdownMenuItem>
+                                                )}
+                                                 {user.role !== "donor" && (
+                                                    <DropdownMenuItem
+                                                        onClick={() => handleRoleChange(user._id, "donor")}
+                                                    >
+                                                        <Users className="w-4 h-4 mr-2" /> Make Donor
                                                     </DropdownMenuItem>
                                                 )}
                                                 {user.role !== "volunteer" && (

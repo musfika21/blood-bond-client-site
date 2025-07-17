@@ -23,14 +23,18 @@ const NAV_ITEMS = {
     ],
     admin: [
         { name: "Home", href: "/dashboard/home" },
+        { name: "Create Donation Request", href: "/dashboard/donation-request" },
+        { name: "My Donation Requests", href: "/dashboard/my-donation-requests" },
         { name: "All Users", href: "/dashboard/all-users" },
         { name: "All Donations", href: "/dashboard/all-donations" },
-        { name: "Profile", href: "/dashboard/profile" },
+        { name: "Content Management" , href: "/dashboard/content-management"},
+        { name: "Profile", href: "/dashboard/profile" }
     ],
     volunteer : [
         { name: "Home", href: "/dashboard/home" },
         { name: "All Donations", href: "/dashboard/all-donations" },
-        { name: "Profile", href: "/dashboard/profile" },
+        { name: "Content Management" , href: "/dashboard/content-management"},
+        { name: "Profile", href: "/dashboard/profile" }
     ]
 };
 

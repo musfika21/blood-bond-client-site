@@ -57,7 +57,6 @@ const PendingDonationRequests = () => {
             ))}
           </tbody>
         </table>
-
         {requests.length === 0 && (
           <p className="text-gray-600 mt-4">No pending donation requests found.</p>
         )}
