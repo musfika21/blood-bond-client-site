@@ -32,6 +32,8 @@ const NAV_ITEMS = {
     ],
     volunteer : [
         { name: "Home", href: "/dashboard/home" },
+        { name: "Create Donation Request", href: "/dashboard/donation-request" },
+        { name: "My Donation Requests", href: "/dashboard/my-donation-requests" },
         { name: "All Donations", href: "/dashboard/all-donations" },
         { name: "Content Management" , href: "/dashboard/content-management"},
         { name: "Profile", href: "/dashboard/profile" }

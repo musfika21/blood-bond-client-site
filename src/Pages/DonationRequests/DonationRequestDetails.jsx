@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import useAxios from '../../CustomHooks/useAxios';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import useAuth from '../../CustomHooks/useAuth';
+import Swal from 'sweetalert2';
 
 const DonationRequestDetails = () => {
     const { id } = useParams();
@@ -21,6 +22,7 @@ const DonationRequestDetails = () => {
     const { user } = useAuth();
     const [details, setDetails] = useState(null);
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axiosSecure.get(`/donation-requests/${id}`)
@@ -28,20 +30,34 @@ const DonationRequestDetails = () => {
             .catch(err => console.error(err));
     }, [axiosSecure, id]);
 
+
     const handleConfirmDonation = async () => {
         try {
             const res = await axiosSecure.patch(`/donation-requests/${id}`, {
                 status: 'inprogress',
             });
             if (res.data.modifiedCount > 0) {
-                alert('Donation status updated to inprogress!');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Donation status updated to inprogress!',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
                 setDetails(prev => ({ ...prev, status: 'inprogress' }));
                 setOpen(false);
+                navigate('/pending-donation-requests')
             }
         } catch (error) {
             console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: 'Something went wrong. Please try again.',
+            });
         }
     };
+
 
     if (!details) return <p>Loading...</p>;
 

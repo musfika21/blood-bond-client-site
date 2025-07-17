@@ -9,8 +9,7 @@ import { Button } from "@material-tailwind/react";
 
 const DonorHome = () => {
 
-    const { user, currentUser } = useAuth();
-    console.log(currentUser)
+    const { user } = useAuth();
     const axiosSecure = useAxios();
     const navigate = useNavigate();
     const [donationRequests, setDonationRequests] = useState([]);
