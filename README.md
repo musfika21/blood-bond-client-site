@@ -1,8 +1,8 @@
 # Blood Connect - Frontend
 
 **Live Site**: [https://your-live-site-url.com](https://your-live-site-url.com)  
-**Admin Email**: admin@example.com  
-**Admin Password**: yourAdminPassword
+**Admin Email**: admin@gmail.com  
+**Admin Password**: admin123
 
 ---
 
@@ -49,14 +49,3 @@
 2. Install dependencies  
 3. Configure `.env` with Firebase and API URL  
 4. Run using `npm run dev`
-
----
-
-## 📁 Notable Commits
-
-✅ 20+ meaningful commits including:
-- Dashboard layout and role management
-- Profile update with avatar upload
-- Create & manage donation requests
-- Blog editor with publish/draft system
-- JWT-protected routing and session handling
