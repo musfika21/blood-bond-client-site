@@ -61,11 +61,11 @@ const Router = createBrowserRouter([
             },
             {
                 path: '/funding',
-                element: <PrivateRoutes><Fund/></PrivateRoutes>
+                element: <PrivateRoutes><Fund /></PrivateRoutes>
             },
             {
                 path: '/add-fund',
-                element: <PrivateRoutes><AddFund/></PrivateRoutes>
+                element: <PrivateRoutes><AddFund /></PrivateRoutes>
             }
 
         ]
