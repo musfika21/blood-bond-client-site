@@ -19,6 +19,7 @@ import {
     PaginationLink,
 } from "@/components/ui/pagination";
 import useAuth from "../../CustomHooks/useAuth";
+import { useLocation } from "react-router";
 
 const AllDonations = () => {
     const axios = useAxios();
@@ -34,6 +35,13 @@ const AllDonations = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
     const limit = 6;
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname === "/dashboard/all-donations") {
+            window.document.title = "All Donation Requests | Blood Bond";
+        }
+    }, [location.pathname]);
 
     useEffect(() => {
         axios

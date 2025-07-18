@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useParams, useNavigate, useLocation } from 'react-router';
 import useAxios from '../../CustomHooks/useAxios';
 import useAuth from '../../CustomHooks/useAuth';
 import moment from 'moment';
@@ -13,6 +13,16 @@ const BlogDetails = () => {
     const axiosSecure = useAxios();
     const { currentUser } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    console.log(blog)
+
+    useEffect(() => {
+        if (blog?.title) {
+            document.title = blog.title;
+        } else {
+            document.title = "Loading Blog...";
+        }
+    }, [blog]);
 
     useEffect(() => {
         const fetchBlog = async () => {

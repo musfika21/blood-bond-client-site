@@ -8,7 +8,7 @@ import {
   Pagination, PaginationContent, PaginationItem, PaginationLink,
   PaginationNext, PaginationPrevious
 } from "@/components/ui/pagination";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import useAxios from "../../CustomHooks/useAxios";
 import useAuth from "../../CustomHooks/useAuth";
 import BlogCard from './BlogCard';
@@ -21,6 +21,13 @@ const ManageContent = () => {
   const [filter, setFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2;
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/dashboard/content-management") {
+      window.document.title = "Content Management";
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -71,7 +78,7 @@ const ManageContent = () => {
           <BlogCard
             key={blog._id}
             blog={blog}
-            />
+          />
         ))}
       </div>
 

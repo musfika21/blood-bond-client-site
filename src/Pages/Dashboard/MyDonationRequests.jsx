@@ -4,7 +4,7 @@ import useAuth from "../../CustomHooks/useAuth";
 import useAxios from "../../CustomHooks/useAxios";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import {
     DropdownMenu,
     DropdownMenuTrigger,
@@ -24,13 +24,19 @@ import {
 const MyDonationRequests = () => {
     const { user } = useAuth();
     const axios = useAxios();
-    const axiosSecure = useAxios(); // Replace with your secure hook later
+    const axiosSecure = useAxios(); // secure api 
     const navigate = useNavigate();
-
     const [requests, setRequests] = useState([]);
     const [filteredRequests, setFilteredRequests] = useState([]);
     const [statusFilter, setStatusFilter] = useState("all");
     const [selectedRequest, setSelectedRequest] = useState(null);
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname === "/dashboard/my-donation-requests") {
+            window.document.title = "Donation Requests";
+        }
+    }, [location.pathname]);
 
     // ✅ For pagination
     const [currentPage, setCurrentPage] = useState(1);

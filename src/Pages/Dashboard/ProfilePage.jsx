@@ -5,34 +5,37 @@ import useAxios from "../../CustomHooks/useAxios";
 import Swal from "sweetalert2";
 import Loader from "../../shared/Loader";
 import { Button } from "@material-tailwind/react";
+import { useLocation } from "react-router";
 
 const ProfilePage = () => {
     const { user } = useAuth();
     const axiosSecure = useAxios();
-
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [error, setError] = useState("");
-
     const [districts, setDistricts] = useState([]);
     const [upazillas, setUpazillas] = useState([]);
-
     const [selectedDistrictId, setSelectedDistrictId] = useState("");
     const [selectedDistrictName, setSelectedDistrictName] = useState("");
     const [selectedUpazillaId, setSelectedUpazillaId] = useState("");
     const [selectedUpazillaName, setSelectedUpazillaName] = useState("");
-
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         avatar: "",
         bloodGroup: "",
     });
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname === "/dashboard/profile") {
+            window.document.title = "Profile Page";
+        }
+    }, [location.pathname]);
 
     const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
-    // Fetch districts once
     useEffect(() => {
         const fetchDistricts = async () => {
             try {
@@ -46,7 +49,6 @@ const ProfilePage = () => {
         fetchDistricts();
     }, [axiosSecure]);
 
-    // Fetch user profile after districts are loaded
     useEffect(() => {
         const fetchProfile = async () => {
             if (!user?.email || !districts.length) return;

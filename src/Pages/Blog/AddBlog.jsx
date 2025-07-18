@@ -1,23 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import useAuth from "../../CustomHooks/useAuth";
 import useAxios from "../../CustomHooks/useAxios";
 import { Button } from "@material-tailwind/react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 const AddBlog = () => {
   const { currentUser } = useAuth();
   const axiosSecure = useAxios();
   const navigate = useNavigate();
   const [posting, setPosting] = useState(false);
-
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/dashboard/content-management/add-blog") {
+      window.document.title = "Add Blog | Blood Bond";
+    }
+  }, [location.pathname]);
 
   const handleBlogSubmit = async (data) => {
     setPosting(true); // Start loading

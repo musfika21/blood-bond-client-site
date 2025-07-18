@@ -5,9 +5,17 @@ import DonorHome from './DonorHome';
 import AdminHome from './AdminHome';
 import { motion } from "framer-motion";
 import Loader from '../../shared/Loader';
+import { useLocation } from 'react-router';
 
 const Dashboard = () => {
   const { currentUser } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+          if (location.pathname === "/dashboard/home") {
+              window.document.title = "Dashboard | Blood Bond";
+          }
+      }, [location.pathname]);
 
   if (!currentUser) {
     return <Loader />

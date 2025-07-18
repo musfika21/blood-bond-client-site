@@ -3,6 +3,7 @@ import useAuth from "../../CustomHooks/useAuth";
 import useAxios from "../../CustomHooks/useAxios";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
+import { useLocation } from "react-router";
 
 const CreateDonationRequest = () => {
     const { user, currentUser } = useAuth();
@@ -12,13 +13,18 @@ const CreateDonationRequest = () => {
     const [districts, setDistricts] = useState([]);
     const [upazillas, setUpazillas] = useState([]);
     const [selectedDistrictId, setSelectedDistrictId] = useState("");
+    const location = useLocation();
 
-    // ✅ Load districts initially
+  useEffect(() => {
+          if (location.pathname === "/dashboard/donation-request") {
+              window.document.title = "Create Donation Request";
+          }
+      }, [location.pathname]);
+
     useEffect(() => {
         axiosSecure.get("/districts").then((res) => setDistricts(res.data));
     }, [axiosSecure]);
 
-    // ✅ Load upazillas when district changes
     useEffect(() => {
         if (selectedDistrictId) {
             axiosSecure
@@ -29,7 +35,6 @@ const CreateDonationRequest = () => {
         }
     }, [selectedDistrictId, axiosSecure]);
 
-    // ✅ Pre-fill requester name & email
     useEffect(() => {
         if (user) {
             setValue("requesterName", user.displayName || "");

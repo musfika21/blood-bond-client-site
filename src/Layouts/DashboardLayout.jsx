@@ -13,7 +13,6 @@ import useAuth from "../CustomHooks/useAuth";
 import { Toaster } from "react-hot-toast";
 import Swal from "sweetalert2";
 
-// ✅ 1️⃣ Role based nav config
 const NAV_ITEMS = {
     donor: [
         { name: "Home", href: "/dashboard/home" },

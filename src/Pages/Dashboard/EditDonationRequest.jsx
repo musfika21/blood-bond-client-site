@@ -11,17 +11,14 @@ const EditDonationRequest = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { register, handleSubmit, reset, setValue } = useForm();
-
     const [districts, setDistricts] = useState([]);
     const [upazillas, setUpazillas] = useState([]);
     const [selectedDistrictId, setSelectedDistrictId] = useState("");
 
-    // ✅ Load districts initially
     useEffect(() => {
         axiosSecure.get("/districts").then((res) => setDistricts(res.data));
     }, [axiosSecure]);
 
-    // ✅ Load upazillas when district changes
     useEffect(() => {
         if (selectedDistrictId) {
             axiosSecure.get(`/upazillas/${selectedDistrictId}`).then((res) => setUpazillas(res.data));
@@ -30,7 +27,6 @@ const EditDonationRequest = () => {
         }
     }, [selectedDistrictId, axiosSecure]);
 
-    // ✅ Load existing request data
     useEffect(() => {
         if (id) {
             axiosSecure.get(`/donation-requests/${id}`).then((res) => {
@@ -52,7 +48,6 @@ const EditDonationRequest = () => {
         }
     }, [id, axiosSecure, setValue, districts, upazillas]);
 
-    // ✅ Submit handler
     const onSubmit = async (data) => {
         const updatedRequest = {
             recipientName: data.recipientName,
