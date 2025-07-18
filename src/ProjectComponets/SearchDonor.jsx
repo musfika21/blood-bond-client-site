@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import useAxios from '../CustomHooks/useAxios';
 import { Button } from '@/components/ui/button';
+import useAxiosSecure from '../CustomHooks/UseAxiosSecure';
 
 const SearchDonor = () => {
-    const axiosSecure = useAxios();
+    const axiosSecure = useAxiosSecure();
     const [districts, setDistricts] = useState([]);
     const [upazilas, setUpazilas] = useState([]);
     const [selectedDistrict, setSelectedDistrict] = useState('');
@@ -53,7 +53,6 @@ const SearchDonor = () => {
             .then(res => setDonors(res.data))
             .catch(err => console.error(err));
     };
-    console.log(donors)
 
     return (
         <section className="p-4 md:p-8">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import useAuth from "../../CustomHooks/useAuth";
@@ -10,6 +10,7 @@ const AddBlog = () => {
   const { currentUser } = useAuth();
   const axiosSecure = useAxios();
   const navigate = useNavigate();
+  const [posting, setPosting] = useState(false);
 
   const {
     register,
@@ -19,6 +20,8 @@ const AddBlog = () => {
   } = useForm();
 
   const handleBlogSubmit = async (data) => {
+    setPosting(true); // Start loading
+
     const imageFile = data.thumbnail[0];
     const formData = new FormData();
     formData.append("image", imageFile);
@@ -50,14 +53,17 @@ const AddBlog = () => {
         if (res.data.insertedId) {
           toast.success("Blog posted successfully!");
           reset();
-          navigate('/dashboard/content-management');
+          navigate("/dashboard/content-management");
         }
       }
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong!");
+    } finally {
+      setPosting(false); // End loading
     }
   };
+
 
   return (
     <div className="max-w-4xl mx-auto mt-5 p-6">
@@ -107,9 +113,10 @@ const AddBlog = () => {
         <div>
           <Button
             type="submit"
-            className="w-full bg-red-600 text-white py-3 rounded hover:bg-red-800 cursor-pointer"
+            className="w-full bg-red-600 text-white py-3 rounded hover:bg-red-800 cursor-pointer disabled:opacity-60"
+            disabled={posting}
           >
-            Post Blog
+            {posting ? "Posting..." : "Post Blog"}
           </Button>
         </div>
       </form>

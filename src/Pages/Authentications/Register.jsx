@@ -8,7 +8,6 @@ import { Button } from "@material-tailwind/react";
 import { IoEye } from "react-icons/io5";
 import { PiEyeClosedBold } from "react-icons/pi";
 import axios from "axios";
-import { auth } from "../../Firebase/firebase.init";
 
 const Register = () => {
     const { createUser, updateUserInfo, setCurrentUser, setUser } = useAuth();
@@ -48,7 +47,7 @@ const Register = () => {
         axiosSecure.get("/districts").then((res) => setDistricts(res.data));
     }, [axiosSecure]);
 
-    // ✅ Fetch Upazillas when District changes
+    // Fetch Upazillas when District changes
     useEffect(() => {
         if (selectedDistrictId) {
             axiosSecure
@@ -61,7 +60,7 @@ const Register = () => {
         setSelectedUpazillaName("");
     }, [selectedDistrictId, axiosSecure]);
 
-    // ✅ Image Upload Handler
+    // Image Upload Handler
     const handleImageUpload = async (file) => {
         const formData = new FormData();
         formData.append("image", file);
