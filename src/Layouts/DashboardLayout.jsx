@@ -43,9 +43,7 @@ const NAV_ITEMS = {
 const DashboardLayout = () => {
     const { user, currentUser, logout } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
-
-    // ✅ 2️⃣ Role থেকে navItems বের করো
-    const role = currentUser?.role || 'donor'; // fallback role
+    const role = currentUser?.role || 'donor';
     const navItems = NAV_ITEMS[role] || [];
 
     const handleLogout = () => {

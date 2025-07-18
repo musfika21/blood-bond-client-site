@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import useAxios from "../../CustomHooks/useAxios";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 import {
     Pagination,
@@ -16,6 +16,13 @@ const Blog = () => {
     const [blogs, setBlogs] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
+    const location = useLocation()
+
+    useEffect(() => {
+            if (location.pathname === "/blogs") {
+                window.document.title = "Blogs | Blood Bond";
+            }
+        }, [location.pathname]);
 
     useEffect(() => {
         const fetchPublishedBlogs = async () => {

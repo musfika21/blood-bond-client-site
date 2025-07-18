@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
     createUserWithEmailAndPassword,
+    getIdToken,
     GoogleAuthProvider,
     onAuthStateChanged,
     signInWithEmailAndPassword,
@@ -10,6 +11,7 @@ import {
 import { AuthContext } from './AuthContext';
 import { auth } from '../Firebase/firebase.init';
 import useAxios from '../CustomHooks/useAxios';
+// import useAxiosSecure from '../CustomHooks/UseAxiosSecure';
 
 const AuthProvider = ({ children }) => {
 
@@ -19,7 +21,7 @@ const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState(null);
 
-    const axiosSecure = useAxios(); // etake pore axios secure diye replace kore nibo
+    const axiosSecure = useAxios();
 
     useEffect(() => {
         const savedTheme = localStorage.getItem("theme");
@@ -59,13 +61,8 @@ const AuthProvider = ({ children }) => {
             displayName: displayName || auth.currentUser?.displayName,
             photoURL: photoURL || auth.currentUser?.photoURL
         });
-
-        // ✅ Force Firebase to re-fetch fresh profile
         await auth.currentUser.reload();
-
-        // ✅ Now update local state
         setUser(auth.currentUser);
-
         setLoading(false);
     };
 
@@ -87,7 +84,7 @@ const AuthProvider = ({ children }) => {
     }, [])
 
     // user of database
-    useEffect(() => {
+   useEffect(() => {
         if (user?.email) {
             axiosSecure.get(`/donors/${user.email}`)
                 .then(res => setCurrentUser(res.data))

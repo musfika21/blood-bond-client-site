@@ -24,6 +24,7 @@ import Blog from '../Pages/Blog/Blog';
 import BlogDetails from '../Pages/Blog/BlogDetails';
 import Fund from '../Pages/Fundings/Fund';
 import AddFund from '../Pages/Fundings/AddFund';
+import Forbidden from '../Pages/Error/Forbidden/Forbidden';
 
 
 const Router = createBrowserRouter([
@@ -66,8 +67,11 @@ const Router = createBrowserRouter([
             {
                 path: '/add-fund',
                 element: <PrivateRoutes><AddFund /></PrivateRoutes>
+            },
+            {
+                path: '/forbidden',
+                Component: Forbidden
             }
-
         ]
     },
     {

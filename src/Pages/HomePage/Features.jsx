@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaHeartbeat, FaHandsHelping, FaSmileBeam } from 'react-icons/fa';
-import donateImage from '../../assets/feature.jpg'; // তোমার image path অনুযায়ী update করো
+import donateImage from '../../assets/feature.jpg';
 import { Link } from 'react-router';
 
 const Features = () => {

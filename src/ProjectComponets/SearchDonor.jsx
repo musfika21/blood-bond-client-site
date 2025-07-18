@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import useAxios from '../CustomHooks/useAxios';
 import { Button } from '@/components/ui/button';
-import useAxiosSecure from '../CustomHooks/UseAxiosSecure';
 
 const SearchDonor = () => {
-    const axiosSecure = useAxiosSecure();
+    const axiosSecure = useAxios();
     const [districts, setDistricts] = useState([]);
     const [upazilas, setUpazilas] = useState([]);
     const [selectedDistrict, setSelectedDistrict] = useState('');
@@ -14,7 +13,7 @@ const SearchDonor = () => {
         upazila: '',
     });
     const [donors, setDonors] = useState([]);
-
+    const [pending, setPending] = useState(false);
 
     useEffect(() => {
         axiosSecure.get('/districts')
@@ -44,15 +43,20 @@ const SearchDonor = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setPending(true);
         const encodedFormData = {
             ...formData,
             bloodGroup: encodeURIComponent(formData.bloodGroup),
         };
+
         axiosSecure.get('/donors-search', {
             params: encodedFormData,
         })
-            .then(res => setDonors(res.data))
-            .catch(err => console.error(err));
+            .then(res => {
+                setDonors(res.data);
+            })
+            .catch(err => console.error(err))
+            .finally(() => setPending(false));
     };
 
     return (
@@ -110,15 +114,19 @@ const SearchDonor = () => {
                 </Button>
             </form>
 
-            {/* Donor Results */}
             <div>
-                {donors.length === 0 ? (
+                {pending ? (
+                    <p className="text-center text-blue-600 font-medium animate-pulse">Searching donors...</p>
+                ) : donors.length === 0 ? (
                     <p className="text-gray-600 text-center">No donors found. Please search above.</p>
                 ) : (
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {donors.map((donor) => (
-                            <div className="flex items-center border border-gray-200 rounded-lg p-4 w-fit bg-white">
-                                {/* Icon or Avatar */}
+                            <div
+                                key={donor._id}
+                                className="flex items-center border border-gray-200 rounded-lg p-4 w-fit bg-white"
+                            >
+                                {/* Avatar */}
                                 <div className="flex-shrink-0">
                                     <div className="flex items-center justify-center">
                                         <img className="h-18 w-18 md:h-25 md:w-25" src={donor.avatar} alt="" />
@@ -143,13 +151,10 @@ const SearchDonor = () => {
                                     </p>
                                 </div>
                             </div>
-
-
                         ))}
                     </div>
                 )}
             </div>
-
         </section>
     );
 };

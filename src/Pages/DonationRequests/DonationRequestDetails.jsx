@@ -25,6 +25,12 @@ const DonationRequestDetails = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+            if (location.pathname === "/donation-requests") {
+                window.document.title = "Register | Blood Bond";
+            }
+        }, [location.pathname]);
+
+    useEffect(() => {
         axiosSecure.get(`/donation-requests/${id}`)
             .then(res => setDetails(res.data))
             .catch(err => console.error(err));

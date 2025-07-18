@@ -6,25 +6,25 @@ const InfoCards = () => {
       id: 1,
       title: 'Find A Clinic',
       subtitle: 'Upcoming clinics',
-      icon: '📍', // Demo icon, replace with <img /> later
+      icon: '📍',
     },
     {
       id: 2,
       title: 'Am I Eligible?',
       subtitle: 'Quick eligibility quiz',
-      icon: '💧', // Demo icon
+      icon: '💧',
     },
     {
       id: 3,
       title: 'How it Works',
       subtitle: 'What to expect',
-      icon: '✅', // Demo icon
+      icon: '✅',
     },
     {
       id: 4,
       title: 'About Blood',
       subtitle: "How it's used",
-      icon: '❤️', // Demo icon
+      icon: '❤️',
     },
   ];
 
@@ -39,7 +39,7 @@ const InfoCards = () => {
             {/* Circle Icon */}
             <div className="absolute -top-10 flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-lg border-4 border-[#e53935]">
               <span className="text-3xl">{card.icon}</span>
-              {/* Replace above with <img src={yourIcon} alt="" className="w-10 h-10" /> */}
+              
             </div>
 
             {/* Card Content */}

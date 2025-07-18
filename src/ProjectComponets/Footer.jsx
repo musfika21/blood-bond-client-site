@@ -10,7 +10,7 @@ const Footer = () => {
         {/* Logo */}
         <div className="flex items-center justify-center mb-4">
           <img className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12" src={logo} alt="drop of blood" />
-          <span className="text-base md:text-lg lg:text-xl font-semibold ml-2">Crimson Care</span>
+          <span className="text-base md:text-lg lg:text-xl font-semibold ml-2">Blood Bond</span>
         </div>
 
         {/* Heading */}
@@ -44,7 +44,7 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <p className="text-xs text-gray-700">&copy; {new Date().getFullYear()} Crimson Care. All rights reserved.</p>
+        <p className="text-xs text-gray-700">&copy; {new Date().getFullYear()} Blood Bond. All rights reserved.</p>
       </div>
     </footer>
   );

@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { useNavigate } from 'react-router';
-import useAxios from '../../CustomHooks/useAxios';
+import { useLocation, useNavigate } from 'react-router';
 import useAuth from '../../CustomHooks/useAuth';
+import useAxios from '../../CustomHooks/useAxios';
 
 const PendingDonationRequests = () => {
+  // const axiosSecure = useAxiosSecure();
   const axiosSecure = useAxios();
   const [requests, setRequests] = useState([]);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const location = useLocation()
+  
+  useEffect(() => {
+          if (location.pathname === "/pending-donation-requests") {
+              window.document.title = "Donation Requests (Pending)";
+          }
+      }, [location.pathname]);
 
   useEffect(() => {
     axiosSecure.get('/donation-requests/pending')

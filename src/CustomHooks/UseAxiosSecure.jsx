@@ -1,41 +1,42 @@
 import axios from 'axios';
-import React from 'react';
-import useAuth from './useAuth';
 import { useNavigate } from 'react-router';
+import { getIdToken } from 'firebase/auth';
+import useAuth from './useAuth';
 
 const axiosSecure = axios.create({
-    baseURL: `http://localhost:3000`
+    baseURL: 'http://localhost:3000',
 });
 
 const useAxiosSecure = () => {
-    const { user, logOut } = useAuth();
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
 
-    axiosSecure.interceptors.request.use(config => {
-        config.headers.Authorization = `Bearer ${user.accessToken}`
-        return config;
-    }, error => {
-        return Promise.reject(error);
-    })
+    axiosSecure.interceptors.request.use(
+        async (config) => {
+            if (user) {
+                const token = await getIdToken(user, true);
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            return config;
+        },
+        (error) => Promise.reject(error)
+    );
 
-    axiosSecure.interceptors.response.use(res => {
-        return res;
-    }, error => {
-        const status = error.status;
-        if (status === 403) {
-            navigate('/forbidden');
+    axiosSecure.interceptors.response.use(
+        (res) => res,
+        async (error) => {
+            const status = error.response?.status;
+            if (status === 401 || status === 403) {
+                if (status === 401) {
+                    await logout();
+                    navigate('/login');
+                } else {
+                    navigate('/forbidden');
+                }
+            }
+            return Promise.reject(error);
         }
-        else if (status === 401) {
-            logOut()
-                .then(() => {
-                    navigate('/login')
-                })
-                .catch(() => { })
-        }
-
-        return Promise.reject(error);
-    })
-
+    );
 
     return axiosSecure;
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import useAxios from '../../CustomHooks/useAxios';
 import moment from 'moment';
 import { Button } from '@/components/ui/button';
@@ -9,10 +9,16 @@ import { Pagination } from '@/components/ui/pagination';
 const Fund = () => {
     const axiosSecure = useAxios();
     const navigate = useNavigate();
-
+    const location = useLocation()
     const [funds, setFunds] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+
+    useEffect(() => {
+            if (location.pathname === "/funding") {
+                window.document.title = "Funds | Blood Bond";
+            }
+        }, [location.pathname]);
 
     useEffect(() => {
         const fetchFunds = async () => {

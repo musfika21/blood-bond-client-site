@@ -86,6 +86,7 @@ const NavLinks = ({ user }) => (
 
 const NavigationBar = () => {
     const { user, currentUser, logout } = useAuth();
+    console.log(currentUser)
     const [open, setOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -149,12 +150,12 @@ const NavigationBar = () => {
                                 )
                             }
                             <div
-                                className={`absolute space-y-3 -right-10 transform -translate-x-1/2 duration-300 ease-in-out transition-all font-semibold bg-[#b49494] text-white rounded-md shadow-lg w-30 p-2 backdrop-blur-lg z-50
+                                className={`absolute space-y-3 -right-10 transform -translate-x-1/2 duration-300 ease-in-out transition-all font-semibold bg-red-600 text-white rounded-md shadow-lg w-30 p-2 backdrop-blur-lg z-50
                                 ${sidebarOpen ? "top-16 md:top-19 lg:top-21 opacity-100 scale-100" : "top-10 opacity-0 scale-90 pointer-events-none"}
                                 `}
                             >
                                 <p className="text-center">{user?.displayName}</p>
-                                <button className=" text-red-600 cursor-pointer" onClick={handleSignOut}>Logout</button>
+                                <button className=" text-gray-100 cursor-pointer" onClick={handleSignOut}>Logout</button>
                             </div>
                         </div>
                     </> : <>
