@@ -88,11 +88,13 @@ const AuthProvider = ({ children }) => {
         if (user?.email) {
             axiosSecure.get(`/donors/${user.email}`)
                 .then(res => setCurrentUser(res.data))
-                .catch(err => console.error(err));
+                .catch(err =>{
+                    //  console.error(err)
+                });
         } else {
             setCurrentUser(null);
         }
-    }, [user, axiosSecure]);
+    }, [user, axiosSecure])
 
     // User Info
     const userInfo = {
