@@ -149,12 +149,14 @@ const NavigationBar = () => {
                                 )
                             }
                             <div
-                                className={`absolute space-y-3 -right-10 transform -translate-x-1/2 duration-300 ease-in-out transition-all font-semibold bg-white text-white rounded-md shadow-lg w-30 p-2 backdrop-blur-lg z-50
+                                className={`absolute space-y-3 -right-10 transform -translate-x-1/2 duration-300 ease-in-out transition-all font-semibold bg-red-50 rounded-md shadow-lg w-30 p-2 backdrop-blur-lg z-50
                                 ${sidebarOpen ? "top-16 md:top-19 lg:top-21 opacity-100 scale-100" : "top-10 opacity-0 scale-90 pointer-events-none"}
                                 `}
                             >
                                 <p className="text-center">{user?.displayName}</p>
-                                <button className=" text-gray-100 cursor-pointer" onClick={handleSignOut}>Logout</button>
+                                <Button className="bg-red-600 text-base text-white p-2 rounded-md hover:bg-red-800 cursor-pointer w-full" onClick={handleSignOut}>
+                                    Logout
+                                </Button>
                             </div>
                         </div>
                     </> : <>

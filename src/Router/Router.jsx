@@ -37,25 +37,25 @@ const Router = createBrowserRouter([
                 Component: Home
             },
             {
-                path: 'blogs',
+                path: '/blogs',
                 Component: Blog
             },
             {
-                path: 'search-donor',
+                path: '/search-donor',
                 Component: SearchDonor
             },
             {
-                path: 'pending-donation-requests',
+                path: '/pending-donation-requests',
                 Component: PendingDonationRequests
             },
             {
-                path: 'donation-requests/:id',
+                path: '/donation-requests/:id',
                 loader: ({ params }) => fetch(`${import.meta.env.VITE_SERVER_API}/donation-requests/${params.id}`),
                 HydrateFallback: <Loader />,
                 element: <PrivateRoutes><DonationRequestDetails /></PrivateRoutes>
             },
             {
-                path: 'blog-details/:id',
+                path: '/blog-details/:id',
                 loader: ({ params }) => fetch(`${import.meta.env.VITE_SERVER_API}/blogs/${params.id}`),
                 hydrateFallbackElement: <Loader />,
                 element: <PrivateRoutes><BlogDetails /></PrivateRoutes>
