@@ -13,7 +13,6 @@ import ProfilePage from '../Pages/Dashboard/ProfilePage';
 import CreateDonationRequest from '../Pages/Dashboard/CreateDonationRequest';
 import EditDonationRequest from '../Pages/Dashboard/EditDonationRequest';
 import Loader from '../shared/Loader';
-import path from 'path';
 import AllUsers from '../Pages/Dashboard/AllUsers';
 import AllDonations from '../Pages/Dashboard/AllDonations';
 import PendingDonationRequests from '../Pages/DonationRequests/PendingDonationRequests';
@@ -26,6 +25,7 @@ import Fund from '../Pages/Fundings/Fund';
 import AddFund from '../Pages/Fundings/AddFund';
 import Forbidden from '../Pages/Error/Forbidden/Forbidden';
 import AboutUs from '../Pages/FooterPage/AboutUs';
+import News from '../Pages/FooterPage/News';
 
 
 const Router = createBrowserRouter([
@@ -76,6 +76,10 @@ const Router = createBrowserRouter([
             {
                 path: '/about-us',
                 Component: AboutUs
+            },
+            {
+                path: '/news',
+                Component: News
             }
         ]
     },

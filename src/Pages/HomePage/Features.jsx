@@ -2,6 +2,7 @@ import React from 'react';
 import { FaHeartbeat, FaHandsHelping, FaSmileBeam } from 'react-icons/fa';
 import donateImage from '../../assets/feature.jpg';
 import { Link } from 'react-router';
+import CommonButton from '../../shared/CommonButton';
 
 const Features = () => {
     const features = [

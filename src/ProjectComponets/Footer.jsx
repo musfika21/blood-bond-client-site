@@ -21,8 +21,8 @@ const Footer = () => {
 
         {/* Footer Links */}
         <div className="flex flex-wrap justify-center gap-6 text-gray-700 text-sm mb-6">
-          <Link to="/" className="hover:text-gray-900">News & Blogs</Link>
-          <Link to='/about-us' className="hover:text-gray-900">About Us</Link>
+          <Link to="/news" onClick={() => window.scrollTo(0, 0)} className="hover:text-gray-900">News</Link>
+          <Link to='/about-us' onClick={() => window.scrollTo(0, 0)} className="hover:text-gray-900">About Us</Link>
         </div>
 
         {/* Social Icons */}
