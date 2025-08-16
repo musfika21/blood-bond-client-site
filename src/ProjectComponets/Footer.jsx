@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaEnvelope } from "react-icons/fa";
 import logo from '../assets/logo.png';
+import { Link } from 'react-router';
 
 const Footer = () => {
   return (
@@ -20,8 +21,8 @@ const Footer = () => {
 
         {/* Footer Links */}
         <div className="flex flex-wrap justify-center gap-6 text-gray-700 text-sm mb-6">
-          <a href="#" className="hover:text-gray-900">News & Blogs</a>
-          <a href="#" className="hover:text-gray-900">About Us</a>
+          <Link to="/" className="hover:text-gray-900">News & Blogs</Link>
+          <Link to='/about-us' className="hover:text-gray-900">About Us</Link>
         </div>
 
         {/* Social Icons */}

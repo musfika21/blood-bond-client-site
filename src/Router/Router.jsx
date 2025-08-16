@@ -25,6 +25,7 @@ import BlogDetails from '../Pages/Blog/BlogDetails';
 import Fund from '../Pages/Fundings/Fund';
 import AddFund from '../Pages/Fundings/AddFund';
 import Forbidden from '../Pages/Error/Forbidden/Forbidden';
+import AboutUs from '../Pages/FooterPage/AboutUs';
 
 
 const Router = createBrowserRouter([
@@ -71,6 +72,10 @@ const Router = createBrowserRouter([
             {
                 path: '/forbidden',
                 Component: Forbidden
+            },
+            {
+                path: '/about-us',
+                Component: AboutUs
             }
         ]
     },
