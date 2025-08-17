@@ -5,7 +5,7 @@ import pic from "../../assets/cover.png";
 const ContactUs = () => {
     return (
         <>
-            <div id="#contact" className="min-h-screen flex items-center justify-center px-4">
+            <div id="#contact" className="min-h-screen flex items-center justify-center px-4 overflow-hidden">
                 <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                     {/* Contact Form */}
                     <div data-aos="fade-right" className="w-full rounded-2xl p-6 sm:p-8 md:p-10">

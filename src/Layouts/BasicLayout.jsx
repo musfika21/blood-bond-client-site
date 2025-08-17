@@ -9,7 +9,7 @@ const BasicLayout = () => {
         <header>
             <NavigationBar/>
         </header>
-        <main className='min-h-[calc(100vh-210px)] py-18'>
+        <main className='min-h-[calc(100vh-210px)] py-15'>
             <Outlet/>
         </main>
         <footer>

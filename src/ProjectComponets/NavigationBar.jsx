@@ -99,8 +99,8 @@ const NavigationBar = () => {
     }
 
     return (
-        <div className="w-full bg-red-50 fixed left-0 right-0 z-1000">
-            <nav className="flex justify-between mx-4 items-center py-3 z-1000">
+        <div className=" bg-red-50 fixed left-0 right-0 z-1000">
+            <nav className="flex justify-between w-11/12 mx-auto items-center py-3 z-1000">
 
                 {/* LOGO */}
                 <div className="flex items-center gap-4">
@@ -115,7 +115,7 @@ const NavigationBar = () => {
 
                         <ul
                             className={`lg:hidden absolute space-y-3 left-1/2 transform -translate-x-1/2 duration-300 ease-in-out transition-all font-semibold bg-white rounded-md shadow-lg w-full p-6 backdrop-blur-lg z-50
-                        ${open ? "top-18 md:top-17 opacity-100 scale-100" : "top-10 opacity-0 scale-90 pointer-events-none"}
+                        ${open ? "top-16 md:top-17 opacity-100 scale-100" : "top-10 opacity-0 scale-90 pointer-events-none"}
                       `}
                         >
                             {NavLinks({ user })}

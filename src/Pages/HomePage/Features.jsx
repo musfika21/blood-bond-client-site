@@ -27,7 +27,7 @@ const Features = () => {
     ];
 
     return (
-        <section className="bg-white py-16 px-4 md:px-8 lg:px-16">
+        <section className="bg-white py-16 px-4 md:px-8 lg:px-16 overflow-hidden">
             <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center">
                 {/* Image */}
                 <div data-aos="fade-right" className="relative">

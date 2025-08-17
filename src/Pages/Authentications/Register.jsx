@@ -10,7 +10,7 @@ import { PiEyeClosedBold } from "react-icons/pi";
 import axios from "axios";
 
 const Register = () => {
-    const { createUser, updateUserInfo, setCurrentUser, setUser } = useAuth();
+    const { createUser, updateUserInfo, setCurrentUser } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const axiosSecure = useAxios();
@@ -25,6 +25,8 @@ const Register = () => {
     const [avatarFile, setAvatarFile] = useState(null);
     const [showPass, setShowPass] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
+
+    const [loading, setLoading] = useState(false);
 
     const {
         register,
@@ -72,6 +74,7 @@ const Register = () => {
     };
 
     const onSubmit = async (data) => {
+        setLoading(true);
         try {
             if (data.password !== data.confirmPassword) {
                 Swal.fire({
@@ -82,6 +85,7 @@ const Register = () => {
                     color: "#b91c1c",
                     confirmButtonColor: "#b91c1c",
                 });
+                setLoading(false);
                 return;
             }
 
@@ -94,6 +98,7 @@ const Register = () => {
                     color: "#92400e",
                     confirmButtonColor: "#ca8a04",
                 });
+                setLoading(false);
                 return;
             }
 
@@ -131,10 +136,10 @@ const Register = () => {
                     iconColor: "#facc15",
                     confirmButtonColor: "#ca8a04",
                 });
+                setLoading(false);
                 return;
             }
 
-            // ✅ Set currentUser immediately after successful insertion
             setCurrentUser(saveUser);
 
             Swal.fire({
@@ -161,11 +166,25 @@ const Register = () => {
                 icon: "error",
                 confirmButtonColor: "#dc2626",
             });
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-red-100 to-white">
+        <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-red-100 to-white relative">
+            {/* ✅ Loading Overlay */}
+            {loading && (
+                <div className="absolute inset-0 bg-black/50 bg-opacity-40 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded shadow-md">
+                        <p className="text-lg font-semibold text-red-600">Registering...</p>
+                        <div className="mt-3 flex justify-center">
+                            <div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="w-full max-w-4xl bg-white rounded-xl shadow p-6 md:p-10">
                 <h1 className="text-3xl font-bold text-center mb-2">Join Us!</h1>
                 <h2 className="text-xl text-center text-red-600 mb-8">Register as Donor</h2>
@@ -334,8 +353,9 @@ const Register = () => {
                         <Button
                             type="submit"
                             className="w-full bg-red-600 text-white py-3 cursor-pointer"
+                            disabled={loading} // ✅ prevent multiple clicks
                         >
-                            Register
+                            {loading ? "Registering..." : "Register"}
                         </Button>
                     </div>
                 </form>
