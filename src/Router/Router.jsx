@@ -26,6 +26,7 @@ import AddFund from '../Pages/Fundings/AddFund';
 import Forbidden from '../Pages/Error/Forbidden/Forbidden';
 import AboutUs from '../Pages/FooterPage/AboutUs';
 import News from '../Pages/FooterPage/News';
+import HowItWorks from '../Pages/ExtraPages/HowItWorks';
 
 
 const Router = createBrowserRouter([
@@ -68,6 +69,10 @@ const Router = createBrowserRouter([
             {
                 path: '/add-fund',
                 element: <PrivateRoutes><AddFund /></PrivateRoutes>
+            },
+            {
+                path: '/how-it-works',
+                Component: HowItWorks
             },
             {
                 path: '/forbidden',
@@ -125,6 +130,10 @@ const Router = createBrowserRouter([
                 path: 'content-management/add-blog',
                 Component: AddBlog
             },
+            // {
+            //     path: 'add-fund',
+            //     Component: AddFund
+            // }
 
         ]
     },

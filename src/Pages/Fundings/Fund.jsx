@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import useAxios from '../../CustomHooks/useAxios';
 import moment from 'moment';
-import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Pagination } from '@/components/ui/pagination';
+import CommonButton from '../../shared/CommonButton';
 
 const Fund = () => {
     const axiosSecure = useAxios();
@@ -34,10 +34,10 @@ const Fund = () => {
     }, [page, axiosSecure]);
 
     return (
-        <section className="p-6">
+        <section className="px-6 py-auto">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-red-600">All Funds</h2>
-                <Button onClick={() => navigate('/dashboard/add-fund')}>Add Fund</Button>
+                <CommonButton onClick={() => navigate('/add-fund')}>Add Fund</CommonButton>
             </div>
 
             <div className="overflow-x-auto rounded border border-gray-200 shadow">

@@ -5,6 +5,7 @@ import Features from './Features';
 import ContactUs from './ContactUs';
 import { useLocation } from 'react-router';
 import Sections from './Sections';
+import Testimonials from './Testimonials';
 
 const Home = () => {
 
@@ -19,8 +20,9 @@ const Home = () => {
     return (
         <div>
             <Banner/>
-            {/* <Sections/> */}
             <Features/>
+            <Sections/>
+            <Testimonials/>
             <ContactUs/>
             {/* <InfoCards/> */}
         </div>

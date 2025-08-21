@@ -53,8 +53,8 @@ const Blog = () => {
     };
 
     return (
-        <div className="p-5 overflow-x-auto">
-            <h1 className="text-2xl font-bold mb-4">Published Blogs</h1>
+        <div className="px-6 py-12 overflow-x-auto">
+            <h1 className="text-2xl font-bold mb-4 text-red-600">Published Blogs</h1>
 
             {paginatedBlogs.length === 0 ? (
                 <p className="text-center my-20">No published blogs available.</p>

@@ -4,10 +4,28 @@ import { useNavigate, useLocation, Link } from "react-router";
 import useAuth from "../../CustomHooks/useAuth";
 import useAxios from "../../CustomHooks/useAxios";
 import Swal from "sweetalert2";
+import { motion } from 'framer-motion';
 import { Button } from "@material-tailwind/react";
 import { IoEye } from "react-icons/io5";
 import { PiEyeClosedBold } from "react-icons/pi";
 import axios from "axios";
+import { MdBloodtype, MdEmail, MdLock } from "react-icons/md";
+import { GiSyringe } from "react-icons/gi";
+import { FaHandsHelping, FaHeartbeat } from "react-icons/fa";
+
+const floatingIconVariants = {
+    float: {
+        y: [0, -15, 0],
+        scale: [1, 1.1, 1],
+        rotate: [0, 5, -5, 0],
+        transition: {
+            duration: 7,
+            repeat: Infinity,
+            ease: 'easeInOut',
+        },
+    },
+};
+
 
 const Register = () => {
     const { createUser, updateUserInfo, setCurrentUser } = useAuth();
@@ -173,6 +191,60 @@ const Register = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-red-100 to-white relative">
+            <motion.div
+                variants={floatingIconVariants}
+                animate="float"
+                style={{ opacity: 0.28 }}
+                className="absolute top-6 left-6 text-red-300 text-4xl pointer-events-none select-none"
+                aria-hidden="true" >
+                <MdBloodtype />
+            </motion.div>
+            <motion.div
+                variants={floatingIconVariants}
+                animate="float"
+                transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                style={{ opacity: 0.26 }} className="absolute top-20 right-14 text-red-300 text-3xl pointer-events-none select-none" aria-hidden="true" >
+                <GiSyringe />
+            </motion.div>
+
+            <motion.div
+                variants={floatingIconVariants}
+                animate="float"
+                transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+                style={{ opacity: 0.3 }}
+                className="absolute bottom-28 left-10 text-red-300 text-5xl pointer-events-none select-none"
+                aria-hidden="true" >
+                <FaHeartbeat />
+            </motion.div>
+
+            <motion.div
+                variants={floatingIconVariants}
+                animate="float"
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 2.5 }}
+                style={{ opacity: 0.27 }}
+                className="absolute bottom-14 right-20 text-red-300 text-4xl pointer-events-none select-none"
+                aria-hidden="true" >
+                <MdEmail />
+            </motion.div>
+
+            <motion.div
+                variants={floatingIconVariants}
+                animate="float"
+                transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+                style={{ opacity: 0.26 }}
+                className="absolute top-1/2 left-1/4 -translate-y-1/2 text-red-300 text-6xl pointer-events-none select-none" aria-hidden="true" >
+                <MdLock />
+            </motion.div>
+
+            <motion.div
+                variants={floatingIconVariants}
+                animate="float"
+                transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 3.5 }}
+                style={{ opacity: 0.28 }}
+                className="absolute top-1/3 right-1/3 text-red-300 text-5xl pointer-events-none select-none"
+                aria-hidden="true" >
+                <FaHandsHelping />
+            </motion.div>
             {/* ✅ Loading Overlay */}
             {loading && (
                 <div className="absolute inset-0 bg-black/50 bg-opacity-40 flex items-center justify-center z-50">

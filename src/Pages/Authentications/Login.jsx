@@ -31,6 +31,7 @@ const formVariants = {
 const Login = () => {
     const { loginUser } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // <-- loading state
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
@@ -45,8 +46,9 @@ const Login = () => {
         e.preventDefault();
         const form = e.target;
         const formData = new FormData(form);
-
         const { email, password } = Object.fromEntries(formData);
+
+        setIsLoading(true); // start loading
 
         loginUser(email, password)
             .then(() => {
@@ -71,75 +73,68 @@ const Login = () => {
                     confirmButtonColor: "#b91c1c",
                     confirmButtonText: "Try Again",
                 });
+            })
+            .finally(() => {
+                setIsLoading(false); // stop loading
             });
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#ffe6e6] to-[#ffffff] px-4 relative overflow-hidden">
             {/* Background floating icons */}
-            <motion.div
-                variants={floatingIconVariants}
-                animate="float"
-                style={{ opacity: 0.28 }}
-                className="absolute top-6 left-6 text-red-300 text-4xl pointer-events-none select-none"
-                aria-hidden="true"
-            >
-                <MdBloodtype />
-            </motion.div>
+            <motion.div 
+                variants={floatingIconVariants} 
+                animate="float" 
+                style={{ opacity: 0.28 }} 
+                className="absolute top-6 left-6 text-red-300 text-4xl pointer-events-none select-none" 
+                aria-hidden="true" >
+                     <MdBloodtype /> 
+            </motion.div> 
+            <motion.div 
+                variants={floatingIconVariants} 
+                animate="float" 
+                transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }} 
+                style={{ opacity: 0.26 }} className="absolute top-20 right-14 text-red-300 text-3xl pointer-events-none select-none" aria-hidden="true" > 
+                <GiSyringe /> 
+            </motion.div> 
 
-            <motion.div
-                variants={floatingIconVariants}
-                animate="float"
-                transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                style={{ opacity: 0.26 }}
-                className="absolute top-20 right-14 text-red-300 text-3xl pointer-events-none select-none"
-                aria-hidden="true"
-            >
-                <GiSyringe />
-            </motion.div>
+            <motion.div 
+                variants={floatingIconVariants} 
+                animate="float" 
+                transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 2 }} 
+                style={{ opacity: 0.3 }} 
+                className="absolute bottom-28 left-10 text-red-300 text-5xl pointer-events-none select-none" 
+                aria-hidden="true" > 
+                <FaHeartbeat /> 
+            </motion.div> 
 
-            <motion.div
-                variants={floatingIconVariants}
-                animate="float"
-                transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-                style={{ opacity: 0.3 }}
-                className="absolute bottom-28 left-10 text-red-300 text-5xl pointer-events-none select-none"
-                aria-hidden="true"
-            >
-                <FaHeartbeat />
-            </motion.div>
-
-            <motion.div
-                variants={floatingIconVariants}
-                animate="float"
-                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 2.5 }}
-                style={{ opacity: 0.27 }}
-                className="absolute bottom-14 right-20 text-red-300 text-4xl pointer-events-none select-none"
-                aria-hidden="true"
-            >
-                <MdEmail />
-            </motion.div>
-
-            <motion.div
-                variants={floatingIconVariants}
-                animate="float"
-                transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
-                style={{ opacity: 0.26 }}
-                className="absolute top-1/2 left-1/4 -translate-y-1/2 text-red-300 text-6xl pointer-events-none select-none"
-                aria-hidden="true"
-            >
-                <MdLock />
-            </motion.div>
-
-            <motion.div
-                variants={floatingIconVariants}
-                animate="float"
-                transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 3.5 }}
-                style={{ opacity: 0.28 }}
+            <motion.div 
+                variants={floatingIconVariants} 
+                animate="float" 
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 2.5 }} 
+                style={{ opacity: 0.27 }} 
+                className="absolute bottom-14 right-20 text-red-300 text-4xl pointer-events-none select-none" 
+                aria-hidden="true" > 
+                <MdEmail /> 
+            </motion.div> 
+            
+            <motion.div 
+                variants={floatingIconVariants} 
+                animate="float" 
+                transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 3 }} 
+                style={{ opacity: 0.26 }} 
+                className="absolute top-1/2 left-1/4 -translate-y-1/2 text-red-300 text-6xl pointer-events-none select-none" aria-hidden="true" > 
+                <MdLock /> 
+            </motion.div> 
+            
+            <motion.div 
+                variants={floatingIconVariants} 
+                animate="float" 
+                transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 3.5 }} 
+                style={{ opacity: 0.28 }} 
                 className="absolute top-1/3 right-1/3 text-red-300 text-5xl pointer-events-none select-none"
-                aria-hidden="true"
-            >
-                <FaHandsHelping />
+                aria-hidden="true" > 
+                <FaHandsHelping /> 
             </motion.div>
 
             <motion.div
@@ -193,9 +188,12 @@ const Login = () => {
 
                     <Button
                         type="submit"
-                        className="w-full bg-red-600 text-white py-2 sm:py-3 text-base rounded-lg font-semibold hover:bg-red-800 transition duration-200 shadow-md cursor-pointer"
+                        disabled={isLoading}
+                        className={`w-full bg-red-600 text-white py-2 sm:py-3 text-base rounded-lg font-semibold 
+                            ${isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-red-800"} 
+                            transition duration-200 shadow-md`}
                     >
-                        Login
+                        {isLoading ? "Signing in..." : "Login"}
                     </Button>
                 </form>
 

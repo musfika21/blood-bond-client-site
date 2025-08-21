@@ -11,7 +11,6 @@ import useAuth from '../../CustomHooks/useAuth';
 import { Button } from '@/components/ui/button';
 import Swal from 'sweetalert2';
 
-// তোমার Stripe publishable key
 const stripePromise = loadStripe(import.meta.env.VITE_payment_key);
 
 const CheckoutForm = () => {
@@ -85,7 +84,7 @@ const CheckoutForm = () => {
             <h2 className="text-xl font-semibold mb-4 text-red-600">Give Fund</h2>
 
             <label className="block mb-2 font-medium">
-                Amount (USD)
+                Amount (BDT)
                 <input
                     type="number"
                     step="0.01"
